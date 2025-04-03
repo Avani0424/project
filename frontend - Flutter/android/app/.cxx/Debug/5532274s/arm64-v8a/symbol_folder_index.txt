@@ -1,0 +1,1 @@
+/home/acmi/Desktop/mini project/project/android/app/build/intermediates/cxx/Debug/5532274s/obj/arm64-v8a

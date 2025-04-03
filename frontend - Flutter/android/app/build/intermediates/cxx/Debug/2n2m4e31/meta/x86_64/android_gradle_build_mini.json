@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/home/acmi/development/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/home/acmi/Android/Sdk/cmake/3.18.1/bin/ninja",
+      "-C",
+      "/home/acmi/Desktop/mini project/project/android/app/.cxx/Debug/2n2m4e31/x86_64",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/home/acmi/Android/Sdk/cmake/3.18.1/bin/ninja",
+    "-C",
+    "/home/acmi/Desktop/mini project/project/android/app/.cxx/Debug/2n2m4e31/x86_64",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

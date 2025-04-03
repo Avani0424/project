@@ -1,0 +1,1 @@
+/home/acmi/Desktop/mini project/project/frontend - Flutter/build/app/intermediates/cxx/Debug/6333122g/obj/x86_64

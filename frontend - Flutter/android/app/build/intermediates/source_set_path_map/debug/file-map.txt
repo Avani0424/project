@@ -1,0 +1,44 @@
+com.example.miniproject.app-jetified-datastore-1.0.0-0 /home/acmi/.gradle/caches/transforms-3/01acde8513a5a969ffe55ecf27152bd7/transformed/jetified-datastore-1.0.0/res
+com.example.miniproject.app-jetified-activity-1.9.3-1 /home/acmi/.gradle/caches/transforms-3/05c52905c888ad9f74cd282208b9066f/transformed/jetified-activity-1.9.3/res
+com.example.miniproject.app-fragment-1.7.1-2 /home/acmi/.gradle/caches/transforms-3/1ef6b55c6db879a748bc3192be52fdc5/transformed/fragment-1.7.1/res
+com.example.miniproject.app-lifecycle-viewmodel-2.7.0-3 /home/acmi/.gradle/caches/transforms-3/2088a9974e99e14aec4318812f1f05e4/transformed/lifecycle-viewmodel-2.7.0/res
+com.example.miniproject.app-jetified-savedstate-ktx-1.2.1-4 /home/acmi/.gradle/caches/transforms-3/237724a9d5d6c48d136fb3ca820112de/transformed/jetified-savedstate-ktx-1.2.1/res
+com.example.miniproject.app-lifecycle-runtime-2.7.0-5 /home/acmi/.gradle/caches/transforms-3/486119dc9b6baa034e100a001d252903/transformed/lifecycle-runtime-2.7.0/res
+com.example.miniproject.app-jetified-profileinstaller-1.3.1-6 /home/acmi/.gradle/caches/transforms-3/4b8b3b6985a04783e66eccd4bfb7b3c4/transformed/jetified-profileinstaller-1.3.1/res
+com.example.miniproject.app-recyclerview-1.0.0-7 /home/acmi/.gradle/caches/transforms-3/519dae4ebc26125a94ff2cdc77cef0e5/transformed/recyclerview-1.0.0/res
+com.example.miniproject.app-transition-1.4.1-8 /home/acmi/.gradle/caches/transforms-3/539f46c3d655a5da15958c9064cffcc7/transformed/transition-1.4.1/res
+com.example.miniproject.app-slidingpanelayout-1.2.0-9 /home/acmi/.gradle/caches/transforms-3/5ea2a78585cda6415b6b69810c4b1324/transformed/slidingpanelayout-1.2.0/res
+com.example.miniproject.app-jetified-lifecycle-viewmodel-savedstate-2.7.0-10 /home/acmi/.gradle/caches/transforms-3/5feda271f5b7f977cadb1ac8bf0d7a91/transformed/jetified-lifecycle-viewmodel-savedstate-2.7.0/res
+com.example.miniproject.app-jetified-window-1.2.0-11 /home/acmi/.gradle/caches/transforms-3/62cfd09410bcd5c47b95563900430716/transformed/jetified-window-1.2.0/res
+com.example.miniproject.app-coordinatorlayout-1.0.0-12 /home/acmi/.gradle/caches/transforms-3/64991ce15a50964cc77857cbf16e7e4b/transformed/coordinatorlayout-1.0.0/res
+com.example.miniproject.app-jetified-lifecycle-runtime-ktx-2.7.0-13 /home/acmi/.gradle/caches/transforms-3/65d0283fff6e9311b59f6d84cbdfabd7/transformed/jetified-lifecycle-runtime-ktx-2.7.0/res
+com.example.miniproject.app-jetified-activity-ktx-1.9.3-14 /home/acmi/.gradle/caches/transforms-3/67c885f531e8a474c5766bc024a1e484/transformed/jetified-activity-ktx-1.9.3/res
+com.example.miniproject.app-core-runtime-2.2.0-15 /home/acmi/.gradle/caches/transforms-3/7c1a13373c9c243bf81e28579231df05/transformed/core-runtime-2.2.0/res
+com.example.miniproject.app-jetified-datastore-preferences-1.0.0-16 /home/acmi/.gradle/caches/transforms-3/7d2445ee4fbbf07e3322d8e2d863fc4b/transformed/jetified-datastore-preferences-1.0.0/res
+com.example.miniproject.app-appcompat-1.1.0-17 /home/acmi/.gradle/caches/transforms-3/7e8afd73efdc8b4de6549f9618ae8a7a/transformed/appcompat-1.1.0/res
+com.example.miniproject.app-jetified-appcompat-resources-1.1.0-18 /home/acmi/.gradle/caches/transforms-3/8b1a011093471a8fbebb63060fc6783c/transformed/jetified-appcompat-resources-1.1.0/res
+com.example.miniproject.app-jetified-lifecycle-livedata-core-ktx-2.7.0-19 /home/acmi/.gradle/caches/transforms-3/91a0786c7d13fd454e09b0bd8e58f4da/transformed/jetified-lifecycle-livedata-core-ktx-2.7.0/res
+com.example.miniproject.app-jetified-tracing-1.2.0-20 /home/acmi/.gradle/caches/transforms-3/ac0dbe43d267cd203b0956cf075cf681/transformed/jetified-tracing-1.2.0/res
+com.example.miniproject.app-jetified-savedstate-1.2.1-21 /home/acmi/.gradle/caches/transforms-3/ad0d620e48dae05ef2664bad7e159aa3/transformed/jetified-savedstate-1.2.1/res
+com.example.miniproject.app-jetified-lifecycle-process-2.7.0-22 /home/acmi/.gradle/caches/transforms-3/b00bec3444b22f75773c96def7f6dea9/transformed/jetified-lifecycle-process-2.7.0/res
+com.example.miniproject.app-jetified-startup-runtime-1.1.1-23 /home/acmi/.gradle/caches/transforms-3/b07fba975e19a80493f7af4a04142d28/transformed/jetified-startup-runtime-1.1.1/res
+com.example.miniproject.app-jetified-core-1.0.0-24 /home/acmi/.gradle/caches/transforms-3/b3b774657b9fa55fdebf67fb0d8e99c9/transformed/jetified-core-1.0.0/res
+com.example.miniproject.app-jetified-lifecycle-viewmodel-ktx-2.7.0-25 /home/acmi/.gradle/caches/transforms-3/c0b7a3b4eb4ec679ce6790c16a3d7211/transformed/jetified-lifecycle-viewmodel-ktx-2.7.0/res
+com.example.miniproject.app-lifecycle-livedata-2.7.0-26 /home/acmi/.gradle/caches/transforms-3/c26a98a259f40e36cee08fe33e0ce8e8/transformed/lifecycle-livedata-2.7.0/res
+com.example.miniproject.app-core-1.13.1-27 /home/acmi/.gradle/caches/transforms-3/c6f7f65f72a516b33f35269dfe080bec/transformed/core-1.13.1/res
+com.example.miniproject.app-preference-1.2.1-28 /home/acmi/.gradle/caches/transforms-3/c85ddfa7b72c4384aa25b7c52321ee2d/transformed/preference-1.2.1/res
+com.example.miniproject.app-jetified-core-ktx-1.13.1-29 /home/acmi/.gradle/caches/transforms-3/d4c2bf2e4b26e8e0baffb6a5dd098e56/transformed/jetified-core-ktx-1.13.1/res
+com.example.miniproject.app-jetified-fragment-ktx-1.7.1-30 /home/acmi/.gradle/caches/transforms-3/e3fc5a4565dfe55ed4f4d870545daa2b/transformed/jetified-fragment-ktx-1.7.1/res
+com.example.miniproject.app-lifecycle-livedata-core-2.7.0-31 /home/acmi/.gradle/caches/transforms-3/ec48f7876415bdd7f2155be3bcc0d983/transformed/lifecycle-livedata-core-2.7.0/res
+com.example.miniproject.app-jetified-window-java-1.2.0-32 /home/acmi/.gradle/caches/transforms-3/fa697aa72588c3380fe896a4aa3e0485/transformed/jetified-window-java-1.2.0/res
+com.example.miniproject.app-jetified-annotation-experimental-1.4.0-33 /home/acmi/.gradle/caches/transforms-3/fcf16b1bcf85ba9dfb89674383fa3d49/transformed/jetified-annotation-experimental-1.4.0/res
+com.example.miniproject.app-packaged_res-34 /home/acmi/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.24/android/build/intermediates/packaged_res/debug
+com.example.miniproject.app-packaged_res-35 /home/acmi/.pub-cache/hosted/pub.dev/image_picker_android-0.8.12+19/android/build/intermediates/packaged_res/debug
+com.example.miniproject.app-packaged_res-36 /home/acmi/.pub-cache/hosted/pub.dev/shared_preferences_android-2.4.0/android/build/intermediates/packaged_res/debug
+com.example.miniproject.app-pngs-37 /home/acmi/Desktop/mini project/project/android/app/build/generated/res/pngs/debug
+com.example.miniproject.app-resValues-38 /home/acmi/Desktop/mini project/project/android/app/build/generated/res/resValues/debug
+com.example.miniproject.app-packageDebugResources-39 /home/acmi/Desktop/mini project/project/android/app/build/intermediates/incremental/debug/packageDebugResources/merged.dir
+com.example.miniproject.app-packageDebugResources-40 /home/acmi/Desktop/mini project/project/android/app/build/intermediates/incremental/debug/packageDebugResources/stripped.dir
+com.example.miniproject.app-merged_res-41 /home/acmi/Desktop/mini project/project/android/app/build/intermediates/merged_res/debug
+com.example.miniproject.app-debug-42 /home/acmi/Desktop/mini project/project/android/app/src/debug/res
+com.example.miniproject.app-main-43 /home/acmi/Desktop/mini project/project/android/app/src/main/res

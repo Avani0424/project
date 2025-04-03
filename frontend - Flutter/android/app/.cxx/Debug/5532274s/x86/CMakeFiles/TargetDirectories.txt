@@ -1,0 +1,2 @@
+/home/acmi/Desktop/mini project/project/android/app/.cxx/Debug/5532274s/x86/CMakeFiles/edit_cache.dir
+/home/acmi/Desktop/mini project/project/android/app/.cxx/Debug/5532274s/x86/CMakeFiles/rebuild_cache.dir

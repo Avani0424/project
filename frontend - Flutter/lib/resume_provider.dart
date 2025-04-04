@@ -1,14 +1,15 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-
 import 'package:http/http.dart' as http;
 
 class ResumeProvider extends ChangeNotifier {
   String _firstName = '';
   String _lastName = '';
   String _email = '';
-  String _age = '';
   String _phoneNumber = '';
+  String _linkedin = ''; // Added LinkedIn
+  String _github = ''; // Added GitHub
+  String _age = '';
   String _city = '';
   String _country = '';
   String _achievements = '';
@@ -19,8 +20,10 @@ class ResumeProvider extends ChangeNotifier {
   String get firstName => _firstName;
   String get lastName => _lastName;
   String get email => _email;
-  String get age => _age;
   String get phoneNumber => _phoneNumber;
+  String get linkedin => _linkedin; // Added LinkedIn getter
+  String get github => _github; // Added GitHub getter
+  String get age => _age;
   String get city => _city;
   String get country => _country;
   String get achievements => _achievements;
@@ -43,13 +46,25 @@ class ResumeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateAge(String value) {
-    _age = value;
+  void updatePhoneNumber(String value) {
+    _phoneNumber = value;
     notifyListeners();
   }
 
-  void updatePhoneNumber(String value) {
-    _phoneNumber = value;
+  void updateLinkedin(String value) {
+    // Added LinkedIn update
+    _linkedin = value;
+    notifyListeners();
+  }
+
+  void updateGithub(String value) {
+    // Added GitHub update
+    _github = value;
+    notifyListeners();
+  }
+
+  void updateAge(String value) {
+    _age = value;
     notifyListeners();
   }
 
@@ -87,10 +102,13 @@ class ResumeProvider extends ChangeNotifier {
     request.fields['first_name'] = _firstName;
     request.fields['last_name'] = _lastName;
     request.fields['email'] = _email;
-    request.fields['age'] = _age;
     request.fields['phone_number'] = _phoneNumber;
-    request.fields['city'] = _city;
-    request.fields['country'] = _country;
+    request.fields['linkedin'] = _linkedin; // Added LinkedIn
+    request.fields['github'] = _github; // Added GitHub
+    // Removed age, city, country from submission as per previous request
+    // request.fields['age'] = _age;
+    // request.fields['city'] = _city;
+    // request.fields['country'] = _country;
     request.fields['achievements'] = _achievements;
     request.fields['template'] = _selectedTemplate; // ✅ Sending template
 

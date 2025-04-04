@@ -114,22 +114,9 @@ class _ContactInformationPageState extends State<ContactInformationPage> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your email';
                       }
-                      // Simple email validation
                       final regex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
                       if (!regex.hasMatch(value)) {
                         return 'Please enter a valid email';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: screenHeight * 0.02),
-                  CustomTextField(
-                    label: 'Age',
-                    initialValue: resumeProvider.age,
-                    onChanged: (value) => resumeProvider.updateAge(value),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your age';
                       }
                       return null;
                     },
@@ -144,29 +131,41 @@ class _ContactInformationPageState extends State<ContactInformationPage> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your mobile number';
                       }
+                      // You might want to add more specific phone number validation
                       return null;
                     },
                   ),
                   SizedBox(height: screenHeight * 0.02),
                   CustomTextField(
-                    label: 'City',
-                    initialValue: resumeProvider.city,
-                    onChanged: (value) => resumeProvider.updateCity(value),
+                    label: 'LinkedIn URL',
+                    initialValue: resumeProvider.linkedin,
+                    onChanged: (value) => resumeProvider.updateLinkedin(value),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your city';
+                        return 'Please enter your LinkedIn URL';
+                      }
+                      // Basic URL validation
+                      final regex = RegExp(
+                          r'^(https?://)?([\w.-]+)\.([a-z]{2,6})([\/\w \.-]*)*\/?$');
+                      if (!regex.hasMatch(value)) {
+                        return 'Please enter a valid URL';
                       }
                       return null;
                     },
                   ),
                   SizedBox(height: screenHeight * 0.02),
                   CustomTextField(
-                    label: 'Country',
-                    initialValue: resumeProvider.country,
-                    onChanged: (value) => resumeProvider.updateCountry(value),
+                    label: 'GitHub URL (Optional)',
+                    initialValue: resumeProvider.github,
+                    onChanged: (value) => resumeProvider.updateGithub(value),
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your country';
+                      if (value != null && value.isNotEmpty) {
+                        // Basic URL validation for optional field
+                        final regex = RegExp(
+                            r'^(https?://)?([\w.-]+)\.([a-z]{2,6})([\/\w \.-]*)*\/?$');
+                        if (!regex.hasMatch(value)) {
+                          return 'Please enter a valid URL';
+                        }
                       }
                       return null;
                     },
@@ -217,6 +216,8 @@ class _ContactInformationPageState extends State<ContactInformationPage> {
                       ),
                     ),
                   ),
+                  SizedBox(
+                      height: screenHeight * 0.03), // Added some bottom padding
                 ],
               ),
             );
@@ -232,6 +233,7 @@ class CustomTextField extends StatelessWidget {
   final String? initialValue;
   final Function(String)? onChanged;
   final String? Function(String?)? validator;
+  final TextInputType? keyboardType; // Added keyboardType
 
   const CustomTextField({
     Key? key,
@@ -239,6 +241,7 @@ class CustomTextField extends StatelessWidget {
     this.initialValue,
     this.onChanged,
     this.validator,
+    this.keyboardType, // Initialize keyboardType
   }) : super(key: key);
 
   @override
@@ -249,6 +252,7 @@ class CustomTextField extends StatelessWidget {
       initialValue: initialValue,
       onChanged: onChanged,
       validator: validator,
+      keyboardType: keyboardType, // Use keyboardType if provided
       decoration: InputDecoration(
         labelText: label,
         labelStyle: TextStyle(

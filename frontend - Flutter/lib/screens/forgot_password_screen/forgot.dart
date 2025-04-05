@@ -5,7 +5,6 @@ import '../otp_screen/otppage.dart';
 class Forgot extends StatefulWidget {
   const Forgot({super.key});
 
-  @override
   State<Forgot> createState() => _LoginState();
 }
 

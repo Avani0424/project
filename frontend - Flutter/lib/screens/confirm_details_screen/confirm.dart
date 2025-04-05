@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:miniproject/screens/login_screen/login.dart';
-import 'package:provider/provider.dart'; // Import the provider package
-import 'package:miniproject/resume_provider.dart'; // Import your ResumeProvider
+import 'package:miniproject/resume_provider.dart';
+import 'package:provider/provider.dart';
 
 class Confirm extends StatelessWidget {
   const Confirm({Key? key}) : super(key: key);
@@ -21,7 +21,7 @@ class Confirm extends StatelessWidget {
               padding: EdgeInsets.all(screenWidth * 0.04),
               child: Image.asset(
                 'assets/images/password.png',
-                height: screenHeight * 0.35, // Adjusted dynamically
+                height: screenHeight * 0.35,
               ),
             ),
             SizedBox(height: screenHeight * 0.03),
@@ -39,55 +39,57 @@ class Confirm extends StatelessWidget {
               child: Consumer<ResumeProvider>(
                 builder: (context, resumeProvider, child) {
                   return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildInfoRow('First Name', resumeProvider.firstName),
                       _buildInfoRow('Last Name', resumeProvider.lastName),
                       _buildInfoRow('Email', resumeProvider.email),
-                      _buildInfoRow('Age', resumeProvider.age),
                       _buildInfoRow('Phone Number', resumeProvider.phoneNumber),
-                      _buildInfoRow('City', resumeProvider.city),
-                      _buildInfoRow('Country', resumeProvider.country),
+                      _buildInfoRow('LinkedIn', resumeProvider.linkedin),
                       _buildInfoRow(
-                          'Achievements', resumeProvider.achievements),
+                          'GitHub',
+                          resumeProvider.github.isNotEmpty
+                              ? resumeProvider.github
+                              : 'Not Provided'),
                       SizedBox(height: screenHeight * 0.04),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Add logic for saving data here, or navigating to login
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      Login(), // Navigate to Login screen
-                              transitionsBuilder: (context, animation,
-                                  secondaryAnimation, child) {
-                                var tween = Tween(begin: 0.0, end: 1.0);
-                                var fadeAnimation = animation.drive(tween);
-
-                                return FadeTransition(
-                                  opacity: fadeAnimation,
-                                  child: child,
-                                );
-                              },
+                      Align(
+                        alignment: Alignment.center,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        const Login(),
+                                transitionsBuilder: (context, animation,
+                                    secondaryAnimation, child) {
+                                  var tween = Tween(begin: 0.0, end: 1.0);
+                                  return FadeTransition(
+                                    opacity: animation.drive(tween),
+                                    child: child,
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.deepPurple,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: screenWidth * 0.1,
+                              vertical: screenHeight * 0.02,
                             ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.deepPurple,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: screenWidth * 0.1,
-                            vertical: screenHeight * 0.02,
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(screenWidth * 0.05),
+                            ),
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(screenWidth * 0.05),
-                          ),
-                        ),
-                        child: Text(
-                          'Confirm & Save',
-                          style: TextStyle(
-                            fontSize: screenWidth * 0.045,
-                            color: Colors.white,
+                          child: Text(
+                            'Confirm & Save',
+                            style: TextStyle(
+                              fontSize: screenWidth * 0.045,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
@@ -103,26 +105,23 @@ class Confirm extends StatelessWidget {
     );
   }
 
-  // Helper function to display a row of information
   Widget _buildInfoRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             '$label: ',
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
             ),
           ),
           Expanded(
             child: Text(
-              value.isEmpty
-                  ? 'Not Provided'
-                  : value, // Display 'Not Provided' if value is empty
-              style: TextStyle(fontSize: 16),
+              value.isNotEmpty ? value : 'Not Provided',
+              style: const TextStyle(fontSize: 16),
             ),
           ),
         ],

@@ -1,44 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:miniproject/screens/resume_details_filling_screens/layouts/acheivements.dart';
+
 import 'package:miniproject/screens/resume_details_filling_screens/selectscreen.dart';
+import 'package:miniproject/screens/resume_details_filling_screens/layouts/acheivements.dart';
 
 class Workdetails extends StatefulWidget {
   const Workdetails({Key? key}) : super(key: key);
 
   @override
-  _WorkdetailsState createState() => _WorkdetailsState();
+  State<Workdetails> createState() => _WorkdetailsState();
 }
 
 class _WorkdetailsState extends State<Workdetails> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _startDateController = TextEditingController();
-  TextEditingController _endDateController = TextEditingController();
-  String? _selectedYearOfExperience;
 
-  List<String> yearsOfExperience =
-      List.generate(51, (index) => (index + 1).toString());
+  List<WorkExperienceForm> workExperienceForms = [WorkExperienceForm()];
 
-  Future<void> _selectDate(
-      BuildContext context, TextEditingController controller) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != DateTime.now()) {
-      setState(() {
-        controller.text = "${picked.toLocal()}"
-            .split(' ')[0]; // Format the date as yyyy-mm-dd
-      });
-    }
+  void _addWorkExperience() {
+    setState(() {
+      workExperienceForms.add(WorkExperienceForm());
+    });
   }
 
-  @override
-  void dispose() {
-    _startDateController.dispose();
-    _endDateController.dispose();
-    super.dispose();
+  void _submitForm() {
+    if (_formKey.currentState?.validate() ?? false) {
+      // Proceed to next screen
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const AchievementsPage(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var tween = Tween(begin: 0.0, end: 1.0);
+            var fadeAnimation = animation.drive(tween);
+            return FadeTransition(opacity: fadeAnimation, child: child);
+          },
+        ),
+      );
+    }
   }
 
   @override
@@ -47,8 +45,6 @@ class _WorkdetailsState extends State<Workdetails> {
     double screenHeight = MediaQuery.of(context).size.height;
     double horizontalPadding = screenWidth * 0.05;
     double verticalPadding = screenHeight * 0.02;
-    double buttonWidth = screenWidth * 0.3;
-    double buttonPaddingVertical = screenHeight * 0.015;
 
     return Scaffold(
       appBar: AppBar(
@@ -71,10 +67,8 @@ class _WorkdetailsState extends State<Workdetails> {
             );
           },
         ),
-        title: const Text(
-          'Work Details',
-          style: TextStyle(color: Colors.black),
-        ),
+        title:
+            const Text('Work Details', style: TextStyle(color: Colors.black)),
         centerTitle: false,
       ),
       body: Padding(
@@ -83,133 +77,140 @@ class _WorkdetailsState extends State<Workdetails> {
           child: Form(
             key: _formKey,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Tell us about your work Experience",
-                  style: TextStyle(
-                      fontSize: screenWidth * 0.05,
-                      fontWeight: FontWeight.bold),
-                ),
+                ...workExperienceForms.map((form) => form),
                 SizedBox(height: verticalPadding),
-                const CustomTextField(label: 'Job Title'),
-                SizedBox(height: verticalPadding),
-                const CustomTextField(label: 'Firm Details'),
-                SizedBox(height: verticalPadding),
-                DropdownButtonFormField<String>(
-                  value: _selectedYearOfExperience,
-                  hint: const Text("Select Year of Experience"),
-                  items: yearsOfExperience.map((year) {
-                    return DropdownMenuItem(value: year, child: Text(year));
-                  }).toList(),
-                  onChanged: (newValue) {
-                    setState(() {
-                      _selectedYearOfExperience = newValue;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Please select a year of experience';
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Year of Experience',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0)),
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 10),
-                  ),
-                ),
-                SizedBox(height: verticalPadding),
-                GestureDetector(
-                  onTap: () => _selectDate(context, _startDateController),
-                  child: AbsorbPointer(
-                    child: TextFormField(
-                      controller: _startDateController,
-                      decoration: InputDecoration(
-                        labelText: 'Start date',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0)),
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 10),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please select a start date';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ),
-                SizedBox(height: verticalPadding),
-                GestureDetector(
-                  onTap: () => _selectDate(context, _endDateController),
-                  child: AbsorbPointer(
-                    child: TextFormField(
-                      controller: _endDateController,
-                      decoration: InputDecoration(
-                        labelText: 'End date',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0)),
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 10),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please select an end date';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ),
-                SizedBox(height: verticalPadding),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder:
-                                (context, animation, secondaryAnimation) =>
-                                    const AchievementsPage(),
-                            transitionsBuilder: (context, animation,
-                                secondaryAnimation, child) {
-                              var tween = Tween(begin: 0.0, end: 1.0);
-                              var fadeAnimation = animation.drive(tween);
-                              return FadeTransition(
-                                  opacity: fadeAnimation, child: child);
-                            },
-                          ),
-                        );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.purple[900],
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: buttonWidth * 0.2,
-                        vertical: buttonPaddingVertical,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: _addWorkExperience,
+                      icon: const Icon(Icons.add),
+                      label: const Text("Add More"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
                       ),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        Text('Next', style: TextStyle(color: Colors.white)),
-                        SizedBox(width: 10),
-                      ],
+                    ElevatedButton(
+                      onPressed: _submitForm,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.purple[900],
+                      ),
+                      child: const Text("Next",
+                          style: TextStyle(color: Colors.white)),
                     ),
-                  ),
-                ),
+                  ],
+                )
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class WorkExperienceForm extends StatefulWidget {
+  @override
+  _WorkExperienceFormState createState() => _WorkExperienceFormState();
+}
+
+class _WorkExperienceFormState extends State<WorkExperienceForm> {
+  final TextEditingController _startDateController = TextEditingController();
+  final TextEditingController _endDateController = TextEditingController();
+
+  Future<void> _selectDate(
+      BuildContext context, TextEditingController controller) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null) {
+      controller.text = "${picked.toLocal()}".split(' ')[0];
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double verticalPadding = MediaQuery.of(context).size.height * 0.015;
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: verticalPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const CustomTextField(label: 'Job Title'),
+          SizedBox(height: verticalPadding),
+          const CustomTextField(label: 'Company Name'),
+          SizedBox(height: verticalPadding),
+          const CustomTextField(label: 'Location (City, State)'),
+          SizedBox(height: verticalPadding),
+          GestureDetector(
+            onTap: () => _selectDate(context, _startDateController),
+            child: AbsorbPointer(
+              child: TextFormField(
+                controller: _startDateController,
+                decoration: InputDecoration(
+                  labelText: 'Start Date',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0)),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please select a start date';
+                  }
+                  return null;
+                },
+              ),
+            ),
+          ),
+          SizedBox(height: verticalPadding),
+          GestureDetector(
+            onTap: () => _selectDate(context, _endDateController),
+            child: AbsorbPointer(
+              child: TextFormField(
+                controller: _endDateController,
+                decoration: InputDecoration(
+                  labelText: 'End Date',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0)),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please select an end date';
+                  }
+                  return null;
+                },
+              ),
+            ),
+          ),
+          SizedBox(height: verticalPadding),
+          TextFormField(
+            maxLines: 4,
+            decoration: InputDecoration(
+              labelText: 'Key Responsibilities',
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              hintText: "Add bullet points about your responsibilities",
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter key responsibilities';
+              }
+              return null;
+            },
+          ),
+          const Divider(thickness: 1),
+        ],
       ),
     );
   }

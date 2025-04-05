@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:miniproject/screens/resume_details_filling_screens/layouts/skills.dart';
+import 'package:miniproject/resume_provider.dart';
 import 'package:provider/provider.dart';
-
-import '../../../resume_provider.dart';
+import 'package:miniproject/screens/resume_details_filling_screens/layouts/skills.dart';
 
 class AchievementsPage extends StatefulWidget {
   const AchievementsPage({Key? key}) : super(key: key);
@@ -12,19 +11,18 @@ class AchievementsPage extends StatefulWidget {
 }
 
 class _AchievementsPageState extends State<AchievementsPage> {
-  late TextEditingController _achievementsController;
+  late TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
     final resumeProvider = Provider.of<ResumeProvider>(context, listen: false);
-    _achievementsController =
-        TextEditingController(text: resumeProvider.achievements);
+    _controller = TextEditingController(text: resumeProvider.achievements);
   }
 
   @override
   void dispose() {
-    _achievementsController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -38,12 +36,17 @@ class _AchievementsPageState extends State<AchievementsPage> {
         backgroundColor: const Color(0xFFAD9CD0),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        title:
-            const Text('Achievements', style: TextStyle(color: Colors.black)),
+        title: const Text(
+          'Achievements',
+          style: TextStyle(color: Colors.black),
+        ),
+        centerTitle: false,
       ),
-      body: SingleChildScrollView(
+      body: Padding(
         padding: EdgeInsets.all(screenWidth * 0.05),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,42 +54,44 @@ class _AchievementsPageState extends State<AchievementsPage> {
             Text(
               "Briefly summarize your professional achievements",
               style: TextStyle(
-                  fontSize: screenWidth * 0.05, fontWeight: FontWeight.bold),
+                fontSize: screenWidth * 0.05,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: screenHeight * 0.02),
             Text(
               "Get help writing your bullet points.",
               style: TextStyle(
-                  fontSize: screenWidth * 0.04, color: Colors.black54),
+                fontSize: screenWidth * 0.04,
+                color: Colors.black54,
+              ),
             ),
             SizedBox(height: screenHeight * 0.03),
-            TextField(
-              maxLines: null,
-              keyboardType: TextInputType.multiline,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(screenWidth * 0.02),
+            Expanded(
+              child: TextField(
+                controller: _controller,
+                maxLines: null,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(screenWidth * 0.02),
+                  ),
+                  fillColor: const Color(0xFFFDECEF),
+                  filled: true,
                 ),
-                fillColor: const Color(0xFFFDECEF),
-                filled: true,
+                onChanged: (value) {
+                  Provider.of<ResumeProvider>(context, listen: false)
+                      .updateAchievements(value);
+                },
               ),
-              controller: _achievementsController,
-              onChanged: (value) {
-                Provider.of<ResumeProvider>(context, listen: false)
-                    .updateAchievements(value);
-              },
             ),
             SizedBox(height: screenHeight * 0.03),
             Align(
               alignment: Alignment.bottomRight,
               child: ElevatedButton(
                 onPressed: () {
-                  final achievements =
-                      Provider.of<ResumeProvider>(context, listen: false)
-                          .achievements;
-                  if (achievements.isEmpty) {
+                  if (_controller.text.trim().isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
+                      const SnackBar(
                           content: Text('Please provide your achievements')),
                     );
                   } else {
@@ -94,11 +99,15 @@ class _AchievementsPageState extends State<AchievementsPage> {
                       context,
                       PageRouteBuilder(
                         pageBuilder: (context, animation, secondaryAnimation) =>
-                            Skills(),
+                            const Skills(),
                         transitionsBuilder:
                             (context, animation, secondaryAnimation, child) {
+                          var tween = Tween(begin: 0.0, end: 1.0);
+                          var fadeAnimation = animation.drive(tween);
                           return FadeTransition(
-                              opacity: animation, child: child);
+                            opacity: fadeAnimation,
+                            child: child,
+                          );
                         },
                       ),
                     );
@@ -114,10 +123,18 @@ class _AchievementsPageState extends State<AchievementsPage> {
                     vertical: screenHeight * 0.015,
                   ),
                 ),
-                child: Text(
-                  'Next',
-                  style: TextStyle(
-                      color: Colors.white, fontSize: screenWidth * 0.04),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Next',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: screenWidth * 0.04,
+                      ),
+                    ),
+                    SizedBox(width: screenWidth * 0.02),
+                  ],
                 ),
               ),
             ),

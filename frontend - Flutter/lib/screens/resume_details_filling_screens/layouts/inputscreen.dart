@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:miniproject/screens/resume_details_filling_screens/layouts/education.dart';
 import 'package:miniproject/screens/resume_details_filling_screens/selectscreen.dart';
 import '../../../resume_provider.dart';
+import 'package:provider/provider.dart';
 
 class Inputscreen extends StatelessWidget {
   const Inputscreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ResumeProvider(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: const ContactInformationPage(),
-      ),
-    );
+    return const ContactInformationPage();
   }
 }
 
@@ -48,20 +42,14 @@ class _ContactInformationPageState extends State<ContactInformationPage> {
                     Selectscreen(),
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) {
-                  var tween = Tween(begin: 0.0, end: 1.0);
-                  return FadeTransition(
-                    opacity: animation.drive(tween),
-                    child: child,
-                  );
+                  return FadeTransition(opacity: animation, child: child);
                 },
               ),
             );
           },
         ),
-        title: const Text(
-          'Personal Details',
-          style: TextStyle(color: Colors.black),
-        ),
+        title: const Text('Personal Details',
+            style: TextStyle(color: Colors.black)),
         centerTitle: false,
       ),
       body: SingleChildScrollView(
@@ -77,95 +65,77 @@ class _ContactInformationPageState extends State<ContactInformationPage> {
                   Text(
                     "What's the best ways for employers to contact you?",
                     style: TextStyle(
-                      fontSize: isSmallScreen ? 18 : 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                        fontSize: isSmallScreen ? 18 : 20,
+                        fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: screenHeight * 0.03),
                   CustomTextField(
                     label: 'First Name',
                     initialValue: resumeProvider.firstName,
-                    onChanged: (value) => resumeProvider.updateFirstName(value),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your first name';
-                      }
-                      return null;
-                    },
+                    onChanged: resumeProvider.updateFirstName,
+                    validator: (value) => value == null || value.isEmpty
+                        ? 'Please enter your first name'
+                        : null,
                   ),
                   SizedBox(height: screenHeight * 0.02),
                   CustomTextField(
                     label: 'Last Name',
                     initialValue: resumeProvider.lastName,
-                    onChanged: (value) => resumeProvider.updateLastName(value),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your last name';
-                      }
-                      return null;
-                    },
+                    onChanged: resumeProvider.updateLastName,
+                    validator: (value) => value == null || value.isEmpty
+                        ? 'Please enter your last name'
+                        : null,
                   ),
                   SizedBox(height: screenHeight * 0.02),
                   CustomTextField(
                     label: 'Email',
                     initialValue: resumeProvider.email,
-                    onChanged: (value) => resumeProvider.updateEmail(value),
+                    onChanged: resumeProvider.updateEmail,
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
+                      if (value == null || value.isEmpty)
                         return 'Please enter your email';
-                      }
                       final regex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                      if (!regex.hasMatch(value)) {
-                        return 'Please enter a valid email';
-                      }
-                      return null;
+                      return !regex.hasMatch(value)
+                          ? 'Please enter a valid email'
+                          : null;
                     },
                   ),
                   SizedBox(height: screenHeight * 0.02),
                   CustomTextField(
                     label: 'Mobile No',
                     initialValue: resumeProvider.phoneNumber,
-                    onChanged: (value) =>
-                        resumeProvider.updatePhoneNumber(value),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your mobile number';
-                      }
-                      // You might want to add more specific phone number validation
-                      return null;
-                    },
+                    onChanged: resumeProvider.updatePhoneNumber,
+                    validator: (value) => value == null || value.isEmpty
+                        ? 'Please enter your mobile number'
+                        : null,
                   ),
                   SizedBox(height: screenHeight * 0.02),
                   CustomTextField(
                     label: 'LinkedIn URL',
                     initialValue: resumeProvider.linkedin,
-                    onChanged: (value) => resumeProvider.updateLinkedin(value),
+                    onChanged: resumeProvider.updateLinkedin,
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
+                      if (value == null || value.isEmpty)
                         return 'Please enter your LinkedIn URL';
-                      }
-                      // Basic URL validation
                       final regex = RegExp(
-                          r'^(https?://)?([\w.-]+)\.([a-z]{2,6})([\/\w \.-]*)*\/?$');
-                      if (!regex.hasMatch(value)) {
-                        return 'Please enter a valid URL';
-                      }
-                      return null;
+                          r'^(https?://)?([\w.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?$');
+                      return !regex.hasMatch(value)
+                          ? 'Please enter a valid URL'
+                          : null;
                     },
                   ),
                   SizedBox(height: screenHeight * 0.02),
                   CustomTextField(
                     label: 'GitHub URL (Optional)',
                     initialValue: resumeProvider.github,
-                    onChanged: (value) => resumeProvider.updateGithub(value),
+                    onChanged: resumeProvider.updateGithub,
                     validator: (value) {
                       if (value != null && value.isNotEmpty) {
-                        // Basic URL validation for optional field
                         final regex = RegExp(
-                            r'^(https?://)?([\w.-]+)\.([a-z]{2,6})([\/\w \.-]*)*\/?$');
-                        if (!regex.hasMatch(value)) {
-                          return 'Please enter a valid URL';
-                        }
+                            r'^(https?://)?([\w.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?$');
+                        return !regex.hasMatch(value)
+                            ? 'Please enter a valid URL'
+                            : null;
                       }
                       return null;
                     },
@@ -184,11 +154,8 @@ class _ContactInformationPageState extends State<ContactInformationPage> {
                                       const Education(),
                               transitionsBuilder: (context, animation,
                                   secondaryAnimation, child) {
-                                var tween = Tween(begin: 0.0, end: 1.0);
                                 return FadeTransition(
-                                  opacity: animation.drive(tween),
-                                  child: child,
-                                );
+                                    opacity: animation, child: child);
                               },
                             ),
                           );
@@ -197,27 +164,22 @@ class _ContactInformationPageState extends State<ContactInformationPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.purple[900],
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                            borderRadius: BorderRadius.circular(8)),
                         padding: EdgeInsets.symmetric(
                           horizontal: screenWidth * 0.06,
                           vertical: screenHeight * 0.02,
                         ),
                       ),
-                      child: Row(
+                      child: const Row(
                         mainAxisSize: MainAxisSize.min,
-                        children: const [
-                          Text(
-                            'Next',
-                            style: TextStyle(color: Colors.white),
-                          ),
+                        children: [
+                          Text('Next', style: TextStyle(color: Colors.white)),
                           SizedBox(width: 10),
                         ],
                       ),
                     ),
                   ),
-                  SizedBox(
-                      height: screenHeight * 0.03), // Added some bottom padding
+                  SizedBox(height: screenHeight * 0.03),
                 ],
               ),
             );
@@ -233,7 +195,7 @@ class CustomTextField extends StatelessWidget {
   final String? initialValue;
   final Function(String)? onChanged;
   final String? Function(String?)? validator;
-  final TextInputType? keyboardType; // Added keyboardType
+  final TextInputType? keyboardType;
 
   const CustomTextField({
     Key? key,
@@ -241,7 +203,7 @@ class CustomTextField extends StatelessWidget {
     this.initialValue,
     this.onChanged,
     this.validator,
-    this.keyboardType, // Initialize keyboardType
+    this.keyboardType,
   }) : super(key: key);
 
   @override
@@ -252,15 +214,11 @@ class CustomTextField extends StatelessWidget {
       initialValue: initialValue,
       onChanged: onChanged,
       validator: validator,
-      keyboardType: keyboardType, // Use keyboardType if provided
+      keyboardType: keyboardType,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(
-          fontSize: screenWidth < 600 ? 14 : 16,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
+        labelStyle: TextStyle(fontSize: screenWidth < 600 ? 14 : 16),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
         contentPadding: EdgeInsets.symmetric(
           horizontal: screenWidth * 0.03,
           vertical: screenWidth * 0.02,

@@ -1,28 +1,142 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from pydantic import BaseModel, EmailStr
 import uvicorn
+from typing import List, Optional
+from gpt4all import GPT4All
+from pdf_generation import generate_resume_pdf
 
 app = FastAPI()
 
-# Define the expected resume data
-class ResumeData(BaseModel):
-    first_name: str
-    last_name: str
-    email: str
-    age: str
-    phone_number: str
-    city: str
-    country: str
-    achievements: str
+# Load GPT4All model
+model_path = "models/ggml-nomic-ai-gpt4all-falcon-Q4_0.gguf"
+gpt4all_model = GPT4All("ggml-nomic-ai-gpt4all-falcon-Q4_0", model_path=model_path, allow_download=False)
 
-@app.post("/submit_resume/")
-async def submit_resume(resume: ResumeData):
-    return {
-        "message": "Resume submitted successfully",
-        "first_name": resume.first_name,
-        "last_name": resume.last_name,
-        "email": resume.email
-    }
+# Data Models
+class ContactInfo(BaseModel):
+    email: EmailStr
+    phone: str
+    linkedin: Optional[str] = None
+    github: Optional[str] = None
+
+class Experience(BaseModel):
+    company: str
+    position: str
+    start_date: str
+    end_date: Optional[str] = None
+    responsibilities: List[str]
+
+class Education(BaseModel):
+    institution: str
+    degree: str
+    start_date: str
+    end_date: str
+    cgpa: Optional[float] = None
+
+class Project(BaseModel):
+    name: str
+    description: str
+
+class Certification(BaseModel):
+    name: str
+    year: int
+
+class Resume(BaseModel):
+    name: str
+    contact: ContactInfo
+    summary: str
+    experience: List[Experience]
+    projects: List[Project]
+    education: Optional[List[Education]] = []
+    skills: Optional[List[str]] = []
+    certifications: Optional[List[Certification]] = []
+    languages: Optional[List[str]] = []
+
+# In-memory storage
+resume_store = {}
+
+# Function to enhance text using GPT4All
+def enhance_text(text: str, prompt: str):
+    full_prompt = f"{prompt}\n{text}"
+    
+    # Generate response from GPT4All
+    with gpt4all_model.chat_session():
+        response = gpt4all_model.generate(full_prompt, max_tokens=150)
+    
+    return response.strip()
+
+@app.post("/complete-resume")
+def process_resume(resume_data: Resume):
+    """
+    Unified API endpoint that:
+    1. Stores the resume data
+    2. Enhances the resume content
+    3. Generates a PDF
+    4. Returns the PDF for download
+    """
+    # Step 1: Store the resume
+    resume_id = len(resume_store) + 1
+    resume_store[resume_id] = resume_data
+    
+    # Step 2: Enhance the resume
+    # Enhance summary
+    enhanced_summary = enhance_text(
+        resume_data.summary,
+        "Improve this professional summary to make it more engaging and impactful for recruiters:"
+    )
+
+    # Enhance work experience descriptions
+    enhanced_experience = []
+    for exp in resume_data.experience:
+        improved_responsibilities = [enhance_text(
+            resp, "Make this work responsibility more professional and impactful for a resume:") 
+            for resp in exp.responsibilities]
+
+        enhanced_experience.append(Experience(
+            company=exp.company,
+            position=exp.position,
+            start_date=exp.start_date,
+            end_date=exp.end_date,
+            responsibilities=improved_responsibilities
+        ))
+
+    # Enhance project descriptions
+    enhanced_projects = []
+    for proj in resume_data.projects:
+        enhanced_description = enhance_text(
+            proj.description, "Make this project description more impressive for a resume:")
+        enhanced_projects.append(Project(
+            name=proj.name,
+            description=enhanced_description
+        ))
+    
+    # Create enhanced resume object
+    enhanced_resume = Resume(
+        name=resume_data.name,
+        contact=resume_data.contact,
+        summary=enhanced_summary,
+        experience=enhanced_experience,
+        projects=enhanced_projects,
+        education=resume_data.education,
+        skills=resume_data.skills,
+        certifications=resume_data.certifications,
+        languages=resume_data.languages
+    )
+    
+    # Store the enhanced resume
+    resume_store[resume_id] = enhanced_resume
+    
+    # Step 3: Generate PDF
+    pdf_file = generate_resume_pdf(enhanced_resume.dict())
+    
+    # Step 4: Return the PDF for download
+    return FileResponse(pdf_file, media_type='application/pdf', filename=f"{resume_data.name.replace(' ', '_')}_resume.pdf")
+
+@app.get("/resume/{resume_id}")
+def get_resume(resume_id: int):
+    if resume_id in resume_store:
+        return resume_store[resume_id]
+    return {"error": "Resume not found"}
 
 @app.get("/ping", status_code=200)
 async def ping():

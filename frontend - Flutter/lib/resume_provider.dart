@@ -12,6 +12,7 @@ class ResumeProvider extends ChangeNotifier {
   // New private variable for achievements
   String _achievements = '';
   String _selectedTemplate = '';
+  String _professionalSummary = '';
 
   // Getters for existing fields
   String get firstName => _firstName;
@@ -24,6 +25,7 @@ class ResumeProvider extends ChangeNotifier {
   // Getter for achievements
   String get achievements => _achievements;
   String get selectedTemplate => _selectedTemplate;
+  String get professionalSummary => _professionalSummary;
 
   // Setters with notifyListeners for existing fields
   void updateFirstName(String value) {
@@ -64,6 +66,11 @@ class ResumeProvider extends ChangeNotifier {
 
   void updateSelectedTemplate(String template) {
     _selectedTemplate = template;
+    notifyListeners();
+  }
+
+  void updateProfessionalSummary(String value) {
+    _professionalSummary = value;
     notifyListeners();
   }
 }

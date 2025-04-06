@@ -86,13 +86,13 @@ class Selectscreen extends StatelessWidget {
                     },
                   ),
                   SectionBox(
-                    title: "Achievements",
+                    title: "Summary",
                     imagePath: "assets/images/achievement.png",
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => AchievementsPage()),
+                            builder: (context) => ProfessionalSummaryPage()),
                       );
                     },
                   ),
@@ -107,7 +107,7 @@ class Selectscreen extends StatelessWidget {
                     },
                   ),
                   SectionBox(
-                    title: "Curriculum Vitae",
+                    title: "Publications",
                     imagePath: "assets/images/curriculum.png",
                     onTap: () {
                       Navigator.push(

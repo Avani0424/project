@@ -11,41 +11,47 @@ class Education extends StatefulWidget {
 
 class _EducationState extends State<Education> {
   final _formKey = GlobalKey<FormState>();
+  String? _selectedDegree;
+  String? _selectedCourse;
   final TextEditingController _collegeController = TextEditingController();
-  final TextEditingController _degreeController = TextEditingController();
-  final TextEditingController _branchController = TextEditingController();
-  final TextEditingController _startDateController = TextEditingController();
-  final TextEditingController _endDateController = TextEditingController();
+  String? _selectedGraduationYear;
+  final TextEditingController _cgpaController = TextEditingController();
 
-  Future<void> _selectDate(
-      BuildContext context, TextEditingController controller) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != DateTime.now()) {
-      setState(() {
-        controller.text = "${picked.toLocal()}".split(' ')[0];
-      });
-    }
-  }
+  final List<String> _degrees = [
+    'Bachelor of Technology',
+    'Bachelor of Science',
+    'Bachelor of Arts',
+    'Master of Technology',
+    'Master of Science',
+    'Master of Arts',
+    'Doctor of Philosophy',
+  ];
+
+  final List<String> _courses = [
+    'Computer Science',
+    'Information Technology',
+    'Electronics and Communication',
+    'Mechanical Engineering',
+    'Civil Engineering',
+    'Electrical Engineering',
+  ];
+
+  final List<String> _graduationYears = List<String>.generate(
+    50,
+    (index) => (DateTime.now().year - index).toString(),
+  );
 
   @override
   void dispose() {
     _collegeController.dispose();
-    _degreeController.dispose();
-    _branchController.dispose();
-    _startDateController.dispose();
-    _endDateController.dispose();
+    _cgpaController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    final double fieldPadding = MediaQuery.of(context).size.width * 0.05;
+    final double fieldFontSize = MediaQuery.of(context).size.width * 0.04;
 
     return Scaffold(
       appBar: AppBar(
@@ -62,128 +68,155 @@ class _EducationState extends State<Education> {
                     (context, animation, secondaryAnimation, child) {
                   var tween = Tween(begin: 0.0, end: 1.0);
                   var fadeAnimation = animation.drive(tween);
-
-                  return FadeTransition(
-                    opacity: fadeAnimation,
-                    child: child,
-                  );
+                  return FadeTransition(opacity: fadeAnimation, child: child);
                 },
               ),
             );
           },
         ),
-        title: Text(
+        title: const Text(
           'Educational Qualification',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: screenWidth * 0.045,
-          ),
+          style: TextStyle(color: Colors.black),
         ),
         centerTitle: false,
       ),
       body: Padding(
-        padding: EdgeInsets.all(screenWidth * 0.05),
+        padding: EdgeInsets.all(fieldPadding),
         child: Form(
           key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: ListView(
             children: [
               Text(
                 "Tell us about your education",
                 style: TextStyle(
-                  fontSize: screenWidth * 0.05,
+                  fontSize: fieldFontSize,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: screenHeight * 0.02),
-              CustomTextField(
-                label: 'College Name',
+              SizedBox(height: fieldPadding),
+              DropdownButtonFormField<String>(
+                value: _selectedDegree,
+                decoration: InputDecoration(
+                  labelText: 'Degree Name',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: fieldPadding,
+                    vertical: fieldPadding * 0.75,
+                  ),
+                ),
+                items: _degrees
+                    .map((degree) => DropdownMenuItem<String>(
+                          value: degree,
+                          child: Text(degree),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedDegree = value;
+                  });
+                },
+                validator: (value) =>
+                    value == null ? 'Please select your degree' : null,
+              ),
+              SizedBox(height: fieldPadding),
+              DropdownButtonFormField<String>(
+                value: _selectedCourse,
+                decoration: InputDecoration(
+                  labelText: 'Course',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: fieldPadding,
+                    vertical: fieldPadding * 0.75,
+                  ),
+                ),
+                items: _courses
+                    .map((course) => DropdownMenuItem<String>(
+                          value: course,
+                          child: Text(course),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedCourse = value;
+                  });
+                },
+                validator: (value) =>
+                    value == null ? 'Please select your course' : null,
+              ),
+              SizedBox(height: fieldPadding),
+              TextFormField(
                 controller: _collegeController,
-                fontSize: screenWidth * 0.04,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your college name';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: screenHeight * 0.015),
-              CustomTextField(
-                label: 'Degree',
-                controller: _degreeController,
-                fontSize: screenWidth * 0.04,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your degree';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: screenHeight * 0.015),
-              CustomTextField(
-                label: 'Branch',
-                controller: _branchController,
-                fontSize: screenWidth * 0.04,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your branch';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: screenHeight * 0.015),
-              GestureDetector(
-                onTap: () => _selectDate(context, _startDateController),
-                child: AbsorbPointer(
-                  child: TextFormField(
-                    controller: _startDateController,
-                    decoration: InputDecoration(
-                      labelText: 'Graduation Start Date',
-                      labelStyle: TextStyle(fontSize: screenWidth * 0.04),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(screenWidth * 0.02),
-                      ),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.04,
-                        vertical: screenHeight * 0.015,
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please select a start date';
-                      }
-                      return null;
-                    },
+                decoration: InputDecoration(
+                  labelText: 'College/University Name',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: fieldPadding,
+                    vertical: fieldPadding * 0.75,
                   ),
                 ),
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Please enter your college/university name'
+                    : null,
               ),
-              SizedBox(height: screenHeight * 0.015),
-              GestureDetector(
-                onTap: () => _selectDate(context, _endDateController),
-                child: AbsorbPointer(
-                  child: TextFormField(
-                    controller: _endDateController,
-                    decoration: InputDecoration(
-                      labelText: 'Graduation End Date',
-                      labelStyle: TextStyle(fontSize: screenWidth * 0.04),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(screenWidth * 0.02),
-                      ),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.04,
-                        vertical: screenHeight * 0.015,
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please select an end date';
-                      }
-                      return null;
-                    },
+              SizedBox(height: fieldPadding),
+              DropdownButtonFormField<String>(
+                value: _selectedGraduationYear,
+                decoration: InputDecoration(
+                  labelText: 'Graduation Year',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: fieldPadding,
+                    vertical: fieldPadding * 0.75,
                   ),
                 ),
+                items: _graduationYears
+                    .map((year) => DropdownMenuItem<String>(
+                          value: year,
+                          child: Text(year),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedGraduationYear = value;
+                  });
+                },
+                validator: (value) =>
+                    value == null ? 'Please select your graduation year' : null,
               ),
-              const Spacer(),
+              SizedBox(height: fieldPadding),
+              TextFormField(
+                controller: _cgpaController,
+                decoration: InputDecoration(
+                  labelText: 'CGPA (optional)',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: fieldPadding,
+                    vertical: fieldPadding * 0.75,
+                  ),
+                ),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                validator: (value) {
+                  if (value != null && value.isNotEmpty) {
+                    final cgpa = double.tryParse(value);
+                    if (cgpa == null || cgpa < 0 || cgpa > 10) {
+                      return 'Please enter a valid CGPA (0-10)';
+                    }
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: fieldPadding * 2),
               Align(
                 alignment: Alignment.bottomRight,
                 child: ElevatedButton(
@@ -194,12 +227,11 @@ class _EducationState extends State<Education> {
                         PageRouteBuilder(
                           pageBuilder:
                               (context, animation, secondaryAnimation) =>
-                                  Workdetails(),
+                                  const Workdetails(),
                           transitionsBuilder:
                               (context, animation, secondaryAnimation, child) {
                             var tween = Tween(begin: 0.0, end: 1.0);
                             var fadeAnimation = animation.drive(tween);
-
                             return FadeTransition(
                               opacity: fadeAnimation,
                               child: child,
@@ -212,25 +244,16 @@ class _EducationState extends State<Education> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.purple[900],
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(screenWidth * 0.02),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     padding: EdgeInsets.symmetric(
-                      horizontal: screenWidth * 0.08,
-                      vertical: screenHeight * 0.02,
+                      horizontal: fieldPadding * 2,
+                      vertical: fieldPadding * 0.8,
                     ),
                   ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Next',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: screenWidth * 0.04,
-                        ),
-                      ),
-                      SizedBox(width: screenWidth * 0.02),
-                    ],
+                  child: const Text(
+                    'Next',
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ),
@@ -238,40 +261,6 @@ class _EducationState extends State<Education> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class CustomTextField extends StatelessWidget {
-  final String label;
-  final TextEditingController controller;
-  final double fontSize;
-  final String? Function(String?)? validator;
-
-  const CustomTextField({
-    Key? key,
-    required this.label,
-    required this.controller,
-    required this.fontSize,
-    this.validator,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: TextStyle(fontSize: fontSize),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(fontSize * 0.4),
-        ),
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: fontSize * 1.5,
-          vertical: fontSize * 0.8,
-        ),
-      ),
-      validator: validator,
     );
   }
 }

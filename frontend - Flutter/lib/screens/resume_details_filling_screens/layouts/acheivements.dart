@@ -3,21 +3,28 @@ import 'package:miniproject/resume_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:miniproject/screens/resume_details_filling_screens/layouts/skills.dart';
 
-class AchievementsPage extends StatefulWidget {
-  const AchievementsPage({Key? key}) : super(key: key);
+class ProfessionalSummaryPage extends StatefulWidget {
+  const ProfessionalSummaryPage({Key? key}) : super(key: key);
 
   @override
-  State<AchievementsPage> createState() => _AchievementsPageState();
+  State<ProfessionalSummaryPage> createState() =>
+      _ProfessionalSummaryPageState();
 }
 
-class _AchievementsPageState extends State<AchievementsPage> {
+class _ProfessionalSummaryPageState extends State<ProfessionalSummaryPage> {
   late TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
-    final resumeProvider = Provider.of<ResumeProvider>(context, listen: false);
-    _controller = TextEditingController(text: resumeProvider.achievements);
+    _controller = TextEditingController();
+
+    // Delay fetching provider data until after build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final resumeProvider =
+          Provider.of<ResumeProvider>(context, listen: false);
+      _controller.text = resumeProvider.professionalSummary;
+    });
   }
 
   @override
@@ -28,8 +35,8 @@ class _AchievementsPageState extends State<AchievementsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    final double fieldPadding = MediaQuery.of(context).size.width * 0.05;
+    final double fieldFontSize = MediaQuery.of(context).size.width * 0.04;
 
     return Scaffold(
       appBar: AppBar(
@@ -41,50 +48,44 @@ class _AchievementsPageState extends State<AchievementsPage> {
           },
         ),
         title: const Text(
-          'Achievements',
+          'Professional Summary',
           style: TextStyle(color: Colors.black),
         ),
         centerTitle: false,
       ),
       body: Padding(
-        padding: EdgeInsets.all(screenWidth * 0.05),
+        padding: EdgeInsets.all(fieldPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Briefly summarize your professional achievements",
+              "Briefly summarize your professional background",
               style: TextStyle(
-                fontSize: screenWidth * 0.05,
+                fontSize: fieldFontSize,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: screenHeight * 0.02),
-            Text(
-              "Get help writing your bullet points.",
-              style: TextStyle(
-                fontSize: screenWidth * 0.04,
-                color: Colors.black54,
-              ),
-            ),
-            SizedBox(height: screenHeight * 0.03),
+            SizedBox(height: fieldPadding),
             Expanded(
               child: TextField(
                 controller: _controller,
                 maxLines: null,
                 decoration: InputDecoration(
+                  hintText:
+                      "A concise, 3–5 sentence paragraph that highlights your key skills, experience, and career achievements.",
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(screenWidth * 0.02),
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
                   fillColor: const Color(0xFFFDECEF),
                   filled: true,
                 ),
                 onChanged: (value) {
                   Provider.of<ResumeProvider>(context, listen: false)
-                      .updateAchievements(value);
+                      .updateProfessionalSummary(value);
                 },
               ),
             ),
-            SizedBox(height: screenHeight * 0.03),
+            SizedBox(height: fieldPadding),
             Align(
               alignment: Alignment.bottomRight,
               child: ElevatedButton(
@@ -92,7 +93,8 @@ class _AchievementsPageState extends State<AchievementsPage> {
                   if (_controller.text.trim().isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                          content: Text('Please provide your achievements')),
+                          content:
+                              Text('Please provide your professional summary')),
                     );
                   } else {
                     Navigator.push(
@@ -102,8 +104,8 @@ class _AchievementsPageState extends State<AchievementsPage> {
                             const Skills(),
                         transitionsBuilder:
                             (context, animation, secondaryAnimation, child) {
-                          var tween = Tween(begin: 0.0, end: 1.0);
-                          var fadeAnimation = animation.drive(tween);
+                          var fadeAnimation =
+                              animation.drive(Tween(begin: 0.0, end: 1.0));
                           return FadeTransition(
                             opacity: fadeAnimation,
                             child: child,
@@ -116,25 +118,16 @@ class _AchievementsPageState extends State<AchievementsPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF4B0082),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(screenWidth * 0.02),
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
                   padding: EdgeInsets.symmetric(
-                    horizontal: screenWidth * 0.08,
-                    vertical: screenHeight * 0.015,
+                    horizontal: fieldPadding * 2,
+                    vertical: fieldPadding,
                   ),
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Next',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: screenWidth * 0.04,
-                      ),
-                    ),
-                    SizedBox(width: screenWidth * 0.02),
-                  ],
+                child: const Text(
+                  'Next',
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ),

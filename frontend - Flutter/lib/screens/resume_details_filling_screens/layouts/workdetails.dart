@@ -28,7 +28,7 @@ class _WorkdetailsState extends State<Workdetails> {
         context,
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
-              const AchievementsPage(),
+              const ProfessionalSummaryPage(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             var tween = Tween(begin: 0.0, end: 1.0);
             var fadeAnimation = animation.drive(tween);

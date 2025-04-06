@@ -10,7 +10,7 @@ class TemplateSelectionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final resumeProvider = Provider.of<ResumeProvider>(context);
     final List<String> templates = [
-      'assets/images/template1.jpg',
+      'assets/images/template1.png',
       'assets/images/template2.jpg',
     ];
 

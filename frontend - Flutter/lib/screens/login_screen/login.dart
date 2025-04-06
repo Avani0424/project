@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:miniproject/screens/template_selection_screen/templateselectionpage.dart';
 import 'dart:convert';
+import 'package:miniproject/screens/template_selection_screen/templateselectionpage.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -15,8 +17,7 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
 
-  final String apiUrl =
-      "http://10.0.2.2:8000/ping"; // Replace with your local IP
+  final String apiUrl = "http://10.0.2.2:8000/ping"; // Localhost for emulator
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -40,7 +41,6 @@ class _LoginState extends State<Login> {
     }
   }
 
-  // Snackbar to show messages
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -138,10 +138,17 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.03),
+
+                    // 🔑 LOGIN Button
                     ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState?.validate() ?? false) {
-                          // Handle login logic
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TemplateSelectionPage(),
+                            ),
+                          );
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -157,10 +164,15 @@ class _LoginState extends State<Login> {
                       child: Text(
                         'LOGIN',
                         style: TextStyle(
-                            fontSize: screenWidth * 0.05, color: Colors.white),
+                          fontSize: screenWidth * 0.05,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
+
                     SizedBox(height: screenHeight * 0.02),
+
+                    // 🧪 Check Server Status Button
                     ElevatedButton(
                       onPressed: () {
                         checkServerStatus(); // Call API when pressed
@@ -178,7 +190,9 @@ class _LoginState extends State<Login> {
                       child: Text(
                         'Check Server Status',
                         style: TextStyle(
-                            fontSize: screenWidth * 0.045, color: Colors.white),
+                          fontSize: screenWidth * 0.045,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ],
@@ -193,7 +207,7 @@ class _LoginState extends State<Login> {
   }
 }
 
-// Custom input field widget
+// 🔧 Custom input field widget
 class CustomInputField extends StatelessWidget {
   final IconData icon;
   final String hintText;

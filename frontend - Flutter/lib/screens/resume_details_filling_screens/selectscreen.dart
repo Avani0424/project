@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:miniproject/models/api_request_model.dart';
 import 'package:miniproject/screens/resume_details_filling_screens/layouts/curriculum.dart';
 import 'package:miniproject/screens/resume_details_filling_screens/layouts/inputscreen.dart';
 import 'package:miniproject/screens/resume_details_filling_screens/layouts/acheivements.dart';
@@ -201,31 +200,32 @@ class Selectscreen extends StatelessWidget {
 
   void generatePDF(BuildContext context) async {
     final resumeData = Provider.of<ResumeProvider>(context, listen: false);
-    final api = ResumeApiService();
+    final api = ResumeApiService(context);
 
-    Resume newResume = Resume(
-        name: "${resumeData.firstName} ${resumeData.lastName}",
-        contact: {
+    final newResume = {
+        'name': "${resumeData.firstName} ${resumeData.lastName}",
+        'contact': {
           'email': resumeData.email,
           'phone': resumeData.phoneNumber,
           'linkedin': resumeData.linkedin,
           'github': resumeData.github,
         },
-        summary: resumeData.professionalSummary,
-        experience: resumeData.workHistory,
-        projects: resumeData.projects,
-        education: resumeData.educationList,
-        skills: resumeData.skills,
-        certifications: resumeData.certificates,
-        languages: resumeData.languages);
+        'summary': resumeData.professionalSummary,
+        'experience': resumeData.workHistory,
+        'projects': resumeData.projects,
+        'education': resumeData.educationList,
+        'skills': resumeData.skills,
+        'certifications': resumeData.certificates,
+        'languages': resumeData.languages
+    };
 
         print(newResume);
 
     try {
-      Resume response = await api.postResume(newResume);
-      print("Resume posted successfully. Name: ${response.name}");
-    } catch (e) {
-      print("Error: $e");
+      final response = await api.postResume(newResume);
+      print("Resume posted successfully. Name: $response");
+    } catch (e, stack) {
+      print("Error: $e $stack");
     }
   }
 }

@@ -5,8 +5,17 @@ import uvicorn
 from typing import List, Optional
 from gpt4all import GPT4All
 from pdf_generation import generate_resume_pdf
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Load GPT4All model
 model_path = "models/ggml-nomic-ai-gpt4all-falcon-Q4_0.gguf"
@@ -82,14 +91,14 @@ def process_resume(resume_data: Resume):
     # Enhance summary
     enhanced_summary = enhance_text(
         resume_data.summary,
-        "Improve this professional summary to make it more engaging and impactful for recruiters:"
+        "Improve this professional summary to make it more engaging and impactful for recruiters. Also make sure to reply only the enhanced content and nothing else:"
     )
 
     # Enhance work experience descriptions
     enhanced_experience = []
     for exp in resume_data.experience:
         improved_responsibilities = [enhance_text(
-            resp, "Make this work responsibility more professional and impactful for a resume:") 
+            resp, "Make this work responsibility more professional and impactful for a resume. Also make sure to reply only the enhanced content and nothing else:") 
             for resp in exp.responsibilities]
 
         enhanced_experience.append(Experience(
@@ -104,7 +113,7 @@ def process_resume(resume_data: Resume):
     enhanced_projects = []
     for proj in resume_data.projects:
         enhanced_description = enhance_text(
-            proj.description, "Make this project description more impressive for a resume:")
+            proj.description, "Make this project description more impressive for a resume. Also make sure to reply only the enhanced content and nothing else:")
         enhanced_projects.append(Project(
             name=proj.name,
             description=enhanced_description

@@ -78,8 +78,8 @@ class Login extends StatelessWidget {
                   onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) => TemplateSelectionPage())),
-                  child: Text('skip'))
+                          builder: (_) => const TemplateSelectionPage())),
+                  child: const Text('skip'))
             ],
           ),
         ),

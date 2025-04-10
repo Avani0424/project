@@ -10,7 +10,7 @@ class ResumeProvider extends ChangeNotifier {
   String _github = '';
 
   // ========== Education ==========
-  final List<Map<String, String>> _educationList = [];
+  final List<Map<String, dynamic>> _educationList = [];
 
   // ========== Work History ==========
   final List<Map<String, dynamic>> _workHistory = [];
@@ -41,7 +41,7 @@ class ResumeProvider extends ChangeNotifier {
   String get linkedin => _linkedin;
   String get github => _github;
 
-  List<Map<String, String>> get educationList => _educationList;
+  List<Map<String, dynamic>> get educationList => _educationList;
   List<Map<String, dynamic>> get workHistory => _workHistory;
   List<String> get skills => _skills;
   List<Map<String, String>> get projects => _projects;
@@ -93,10 +93,11 @@ class ResumeProvider extends ChangeNotifier {
   }) {
     _educationList.add({
       'degree': degree,
-      'course': course,
+      
       'institution': institution,
-      'graduationYear': graduationYear,
-      'cgpa': cgpa ?? '',
+      'start_date': '2022',
+      'end_date': graduationYear,
+      'cgpa': double.tryParse(cgpa ?? '0') ?? 0,
     });
     notifyListeners();
   }
@@ -116,19 +117,14 @@ class ResumeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateProjects(List<Map<String, String>> newProjects) {
-    _projects = newProjects;
-    notifyListeners();
-  }
-
   void addProject({required String title, required String description}) {
-    _projects.add({'title': title, 'description': description});
+    _projects.add({'name': title, 'description': description});
     notifyListeners();
   }
 
   void addCertificate({required String title, required String year}) {
     _certificates.add({
-      'name': title, 'year': year
+      'name': title, 'year': int.tryParse(year)
     });
     notifyListeners();
   }

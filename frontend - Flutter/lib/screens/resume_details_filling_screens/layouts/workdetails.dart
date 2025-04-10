@@ -28,11 +28,11 @@ class _WorkdetailsState extends State<Workdetails> {
 
       for (var form in workExperienceForms) {
         provider.addWorkExperience({
-          'jobTitle': form.jobTitleController.text,
+          'position': form.jobTitleController.text,
           'company': form.companyController.text,
-          'location': form.locationController.text,
-          'startDate': form.startDateController.text,
-          'endDate': form.endDateController.text,
+          // 'location': form.locationController.text,
+          'start_date': form.startDateController.text,
+          'end_date': form.endDateController.text,
           'responsibilities': form.responsibilitiesController.text
               .split('\n')
               .where((line) => line.trim().isNotEmpty)

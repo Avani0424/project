@@ -5,7 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:miniproject/screens/splash_screen/startscreen.dart';
 import 'package:provider/provider.dart';
 import 'resume_provider.dart';
-import 'firebase_options.dart'; // <-- ADD THIS LINE
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

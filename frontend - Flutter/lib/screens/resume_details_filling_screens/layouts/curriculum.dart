@@ -131,15 +131,12 @@ class _ProjectPageState extends State<ProjectPage> {
                   final resumeProvider = Provider.of<ResumeProvider>(context, listen: false);
 
                   final projects = projectControllers.map((project) {
-                    return {
-                      'title': project['title']!.text.trim(),
-                      'description': project['description']!.text.trim(),
-                      'responsibilities': project['responsibilities']!.text.trim(),
-                    };
-                  }).where((proj) => proj['title']!.isNotEmpty).toList();
-
-                  resumeProvider.updateProjects(projects);
-
+                    resumeProvider.addProject(
+                      title: project['title']!.text.trim(),
+                      description: project['description']!.text.trim());
+                      // 'responsibilities': project['responsibilities']!.text.trim(),
+                    
+                  }).toList();
                   Navigator.pushReplacement(
                     context,
                     PageRouteBuilder(

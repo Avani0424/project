@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:miniproject/models/api_request_model.dart';
 import 'package:miniproject/screens/resume_details_filling_screens/layouts/curriculum.dart';
-
 import 'package:miniproject/screens/resume_details_filling_screens/layouts/inputscreen.dart';
 import 'package:miniproject/screens/resume_details_filling_screens/layouts/acheivements.dart';
 import 'package:miniproject/screens/resume_details_filling_screens/layouts/skills.dart';
@@ -9,6 +9,7 @@ import 'package:miniproject/screens/resume_details_filling_screens/layouts/certi
 import 'package:miniproject/screens/resume_details_filling_screens/layouts/language.dart';
 import 'package:miniproject/screens/template_selection_screen/templateselectionpage.dart';
 import 'package:miniproject/screens/resume_details_filling_screens/layouts/education.dart';
+import 'package:miniproject/services/api_service.dart';
 import 'package:provider/provider.dart';
 import 'package:miniproject/resume_provider.dart';
 
@@ -68,7 +69,8 @@ class Selectscreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const ContactInformationPage()),
+                            builder: (context) =>
+                                const ContactInformationPage()),
                       );
                     },
                   ),
@@ -78,7 +80,8 @@ class Selectscreen extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const Education()),
+                        MaterialPageRoute(
+                            builder: (context) => const Education()),
                       );
                     },
                   ),
@@ -88,7 +91,8 @@ class Selectscreen extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const Workdetails()),
+                        MaterialPageRoute(
+                            builder: (context) => const Workdetails()),
                       );
                     },
                   ),
@@ -99,7 +103,8 @@ class Selectscreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const ProfessionalSummaryPage()),
+                            builder: (context) =>
+                                const ProfessionalSummaryPage()),
                       );
                     },
                   ),
@@ -119,7 +124,8 @@ class Selectscreen extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const ProjectPage()),
+                        MaterialPageRoute(
+                            builder: (context) => const ProjectPage()),
                       );
                     },
                   ),
@@ -130,7 +136,7 @@ class Selectscreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => CertificatePage()),
+                            builder: (context) => const CertificatePage()),
                       );
                     },
                   ),
@@ -141,7 +147,7 @@ class Selectscreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => LanguagePage()),
+                            builder: (context) => const LanguagePage()),
                       );
                     },
                   ),
@@ -193,20 +199,34 @@ class Selectscreen extends StatelessWidget {
     );
   }
 
-  void generatePDF(BuildContext context) {
+  void generatePDF(BuildContext context) async {
     final resumeData = Provider.of<ResumeProvider>(context, listen: false);
+    final api = ResumeApiService();
 
-    print("Generating PDF with:");
-    print("Name: ${resumeData.firstName} ${resumeData.lastName}");
-    print("Email: ${resumeData.email}");
-    print("Phone: ${resumeData.phoneNumber}");
-    print("LinkedIn: ${resumeData.linkedin}");
-    print("GitHub: ${resumeData.github}");
-    print("Achievements: ${resumeData.achievements}");
-    print("Summary: ${resumeData.professionalSummary}");
-    print("Template: ${resumeData.selectedTemplate}");
+    Resume newResume = Resume(
+        name: "${resumeData.firstName} ${resumeData.lastName}",
+        contact: {
+          'email': resumeData.email,
+          'phone': resumeData.phoneNumber,
+          'linkedin': resumeData.linkedin,
+          'github': resumeData.github,
+        },
+        summary: resumeData.professionalSummary,
+        experience: resumeData.workHistory,
+        projects: resumeData.projects,
+        education: resumeData.educationList,
+        skills: resumeData.skills,
+        certifications: resumeData.certificates,
+        languages: resumeData.languages);
 
-    // TODO: Replace this print block with actual PDF generation logic
+        print(newResume);
+
+    try {
+      Resume response = await api.postResume(newResume);
+      print("Resume posted successfully. Name: ${response.name}");
+    } catch (e) {
+      print("Error: $e");
+    }
   }
 }
 
@@ -215,7 +235,8 @@ class SectionBox extends StatelessWidget {
   final String imagePath;
   final VoidCallback onTap;
 
-  const SectionBox({super.key, 
+  const SectionBox({
+    super.key,
     required this.title,
     required this.imagePath,
     required this.onTap,

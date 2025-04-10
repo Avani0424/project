@@ -2,10 +2,10 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'resume_model.dart';
+import 'package:miniproject/models/api_request_model.dart';
 
 class ResumeApiService {
-  const String baseUrl = 'http://10.0.2.2:8000';
+  static const String baseUrl = 'http://10.0.2.2:8000';
 
   ResumeApiService();
 

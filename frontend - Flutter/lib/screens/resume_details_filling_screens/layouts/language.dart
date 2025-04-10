@@ -140,7 +140,7 @@ class _LanguagePageState extends State<LanguagePage> {
                       context,
                       PageRouteBuilder(
                         pageBuilder: (context, animation, secondaryAnimation) =>
-                            Selectscreen(),
+                            const Selectscreen(),
                         transitionsBuilder:
                             (context, animation, secondaryAnimation, child) {
                           var tween = Tween(begin: 0.0, end: 1.0);

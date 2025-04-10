@@ -144,7 +144,7 @@ class _ProjectPageState extends State<ProjectPage> {
                     context,
                     PageRouteBuilder(
                       pageBuilder: (context, animation, secondaryAnimation) =>
-                          CertificatePage(),
+                          const CertificatePage(),
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) {
                         var tween = Tween(begin: 0.0, end: 1.0);
@@ -183,7 +183,7 @@ class _ProjectPageState extends State<ProjectPage> {
 class SectionTitle extends StatelessWidget {
   final String title;
 
-  const SectionTitle({Key? key, required this.title}) : super(key: key);
+  const SectionTitle({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -199,8 +199,7 @@ class CustomTextField extends StatelessWidget {
   final String label;
   final TextEditingController? controller;
 
-  const CustomTextField({Key? key, required this.label, this.controller})
-      : super(key: key);
+  const CustomTextField({super.key, required this.label, this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -219,7 +218,7 @@ class CustomTextField extends StatelessWidget {
 }
 
 class NextPage extends StatelessWidget {
-  const NextPage({Key? key}) : super(key: key);
+  const NextPage({super.key});
 
   @override
   Widget build(BuildContext context) {

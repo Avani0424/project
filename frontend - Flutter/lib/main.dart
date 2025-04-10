@@ -18,7 +18,7 @@ void main() async {
       enabled: !kReleaseMode,
       builder: (context) => ChangeNotifierProvider(
         create: (context) => ResumeProvider(),
-        child: MyApp(),
+        child: const MyApp(),
       ),
     ),
   );
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
       ),
       builder: DevicePreview.appBuilder,
       debugShowCheckedModeBanner: false,
-      home: StartScreen(),
+      home: const StartScreen(),
     );
   }
 }

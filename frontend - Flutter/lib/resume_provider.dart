@@ -16,13 +16,13 @@ class ResumeProvider extends ChangeNotifier {
   final List<Map<String, dynamic>> _workHistory = [];
 
   // ========== Skills ==========
-  Map<String, List<String>> _skills = {};
+  List<String> _skills = [];
 
   // ========== Projects ==========
   List<Map<String, String>> _projects = [];
 
   // ========== Certificates ==========
-  final List<String> _certificates = [];
+  final List<Map<String, dynamic>> _certificates = [];
 
   // ========== Languages ==========
   List<String> _languages = [];
@@ -43,9 +43,9 @@ class ResumeProvider extends ChangeNotifier {
 
   List<Map<String, String>> get educationList => _educationList;
   List<Map<String, dynamic>> get workHistory => _workHistory;
-  Map<String, List<String>> get skills => _skills;
+  List<String> get skills => _skills;
   List<Map<String, String>> get projects => _projects;
-  List<String> get certificates => _certificates;
+  List<Map<String, dynamic>> get certificates => _certificates;
   List<String> get languages => _languages;
 
   String get achievements => _achievements;
@@ -87,14 +87,14 @@ class ResumeProvider extends ChangeNotifier {
   void addEducation({
     required String degree,
     required String course,
-    required String college,
+    required String institution,
     required String graduationYear,
     String? cgpa,
   }) {
     _educationList.add({
       'degree': degree,
       'course': course,
-      'college': college,
+      'institution': institution,
       'graduationYear': graduationYear,
       'cgpa': cgpa ?? '',
     });
@@ -111,7 +111,7 @@ class ResumeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateSkills(Map<String, List<String>> updatedSkills) {
+  void updateSkills(List<String> updatedSkills) {
     _skills = updatedSkills;
     notifyListeners();
   }
@@ -126,8 +126,10 @@ class ResumeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addCertificate(String certificate) {
-    _certificates.add(certificate);
+  void addCertificate({required String title, required String year}) {
+    _certificates.add({
+      'name': title, 'year': year
+    });
     notifyListeners();
   }
 

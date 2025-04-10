@@ -136,16 +136,15 @@ class _SkillsState extends State<Skills> {
                     if (_formKey.currentState?.validate() ?? false) {
                       final resumeProvider = Provider.of<ResumeProvider>(context, listen: false);
 
-                      final Map<String, List<String>> collectedSkills = {};
+                      List<String> collectedSkills = [];
                       for (var section in skillSections) {
-                        final sectionName = section.sectionNameController.text.trim();
                         final skills = section.skills
                             .map((controller) => controller.text.trim())
                             .where((skill) => skill.isNotEmpty)
                             .toList();
-                        if (sectionName.isNotEmpty && skills.isNotEmpty) {
-                          collectedSkills[sectionName] = skills;
-                        }
+                        
+                          collectedSkills = skills;
+                        
                       }
 
                       resumeProvider.updateSkills(collectedSkills);

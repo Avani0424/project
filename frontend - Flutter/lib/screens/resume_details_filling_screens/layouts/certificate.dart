@@ -34,7 +34,7 @@ class _CertificatePageState extends State<CertificatePage> {
     final resumeProvider = Provider.of<ResumeProvider>(context, listen: false);
     for (var cert in certificates) {
       // You can also store year if needed, but original ResumeProvider only uses a string.
-      resumeProvider.addCertificate('${cert['name']} (${cert['year']})');
+      resumeProvider.addCertificate(title: '${cert['name']}', year: '${cert['year']}');
     }
   }
 
@@ -113,7 +113,7 @@ class _CertificatePageState extends State<CertificatePage> {
                     context,
                     PageRouteBuilder(
                       pageBuilder: (context, animation, secondaryAnimation) =>
-                          LanguagePage(),
+                          const LanguagePage(),
                       transitionsBuilder: (context, animation, secondaryAnimation, child) {
                         var tween = Tween(begin: 0.0, end: 1.0);
                         return FadeTransition(

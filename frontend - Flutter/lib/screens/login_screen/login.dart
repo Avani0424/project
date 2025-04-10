@@ -74,6 +74,12 @@ class Login extends StatelessWidget {
                   elevation: 3,
                 ),
               ),
+              ElevatedButton(
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => TemplateSelectionPage())),
+                  child: Text('skip'))
             ],
           ),
         ),

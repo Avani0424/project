@@ -1,0 +1,76 @@
+{
+  "project_info": {
+    "project_number": "1098765216246",
+    "project_id": "resume-builder-b7065",
+    "storage_bucket": "resume-builder-b7065.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1098765216246:android:0bf749e445f5bc3432bfd7",
+        "android_client_info": {
+          "package_name": "com.example.frontend_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1098765216246-brc6l6q9tk8ipv8jmjg678ntr3af7398.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.frontend_flutter",
+            "certificate_hash": "820ff79e47905429a8f1499a8a86ba2fa53f34c2"
+          }
+        },
+        {
+          "client_id": "1098765216246-ccuudo15lj7hmp7a2m414neufn5nnrnt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBH264ef_mdhmOOnXVKrB3lYLlY_3xATvg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1098765216246-ccuudo15lj7hmp7a2m414neufn5nnrnt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1098765216246:android:0aff022c12f5874532bfd7",
+        "android_client_info": {
+          "package_name": "com.example.miniproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1098765216246-ccuudo15lj7hmp7a2m414neufn5nnrnt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBH264ef_mdhmOOnXVKrB3lYLlY_3xATvg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1098765216246-ccuudo15lj7hmp7a2m414neufn5nnrnt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 class ResumeProvider extends ChangeNotifier {
-  // Existing private variables
+  // ========== Personal Information ==========
   String _firstName = '';
   String _lastName = '';
   String _email = '';
@@ -9,12 +9,31 @@ class ResumeProvider extends ChangeNotifier {
   String _linkedin = '';
   String _github = '';
 
-  // New private variable for achievements
-  String _achievements = '';
-  String _selectedTemplate = '';
-  String _professionalSummary = '';
+  // ========== Education ==========
+  final List<Map<String, String>> _educationList = [];
 
-  // Getters for existing fields
+  // ========== Work History ==========
+  final List<Map<String, dynamic>> _workHistory = [];
+
+  // ========== Skills ==========
+  Map<String, List<String>> _skills = {};
+
+  // ========== Projects ==========
+  List<Map<String, String>> _projects = [];
+
+  // ========== Certificates ==========
+  final List<String> _certificates = [];
+
+  // ========== Languages ==========
+  List<String> _languages = [];
+
+  // ========== Achievements & Summary ==========
+  String _achievements = '';
+  String _professionalSummary = '';
+  String _selectedTemplate = '';
+
+  // ----------------------------------------
+  // GETTERS
   String get firstName => _firstName;
   String get lastName => _lastName;
   String get email => _email;
@@ -22,12 +41,19 @@ class ResumeProvider extends ChangeNotifier {
   String get linkedin => _linkedin;
   String get github => _github;
 
-  // Getter for achievements
-  String get achievements => _achievements;
-  String get selectedTemplate => _selectedTemplate;
-  String get professionalSummary => _professionalSummary;
+  List<Map<String, String>> get educationList => _educationList;
+  List<Map<String, dynamic>> get workHistory => _workHistory;
+  Map<String, List<String>> get skills => _skills;
+  List<Map<String, String>> get projects => _projects;
+  List<String> get certificates => _certificates;
+  List<String> get languages => _languages;
 
-  // Setters with notifyListeners for existing fields
+  String get achievements => _achievements;
+  String get professionalSummary => _professionalSummary;
+  String get selectedTemplate => _selectedTemplate;
+
+  // ----------------------------------------
+  // SETTERS
   void updateFirstName(String value) {
     _firstName = value;
     notifyListeners();
@@ -58,19 +84,70 @@ class ResumeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Setter with notifyListeners for achievements
+  void addEducation({
+    required String degree,
+    required String course,
+    required String college,
+    required String graduationYear,
+    String? cgpa,
+  }) {
+    _educationList.add({
+      'degree': degree,
+      'course': course,
+      'college': college,
+      'graduationYear': graduationYear,
+      'cgpa': cgpa ?? '',
+    });
+    notifyListeners();
+  }
+
+  void addWorkExperience(Map<String, dynamic> experience) {
+    _workHistory.add(experience);
+    notifyListeners();
+  }
+
+  void clearWorkHistory() {
+    _workHistory.clear();
+    notifyListeners();
+  }
+
+  void updateSkills(Map<String, List<String>> updatedSkills) {
+    _skills = updatedSkills;
+    notifyListeners();
+  }
+
+  void updateProjects(List<Map<String, String>> newProjects) {
+    _projects = newProjects;
+    notifyListeners();
+  }
+
+  void addProject({required String title, required String description}) {
+    _projects.add({'title': title, 'description': description});
+    notifyListeners();
+  }
+
+  void addCertificate(String certificate) {
+    _certificates.add(certificate);
+    notifyListeners();
+  }
+
+  void updateLanguages(List<String> langs) {
+    _languages = langs;
+    notifyListeners();
+  }
+
   void updateAchievements(String value) {
     _achievements = value;
     notifyListeners();
   }
 
-  void updateSelectedTemplate(String template) {
-    _selectedTemplate = template;
+  void updateProfessionalSummary(String value) {
+    _professionalSummary = value;
     notifyListeners();
   }
 
-  void updateProfessionalSummary(String value) {
-    _professionalSummary = value;
+  void updateSelectedTemplate(String template) {
+    _selectedTemplate = template;
     notifyListeners();
   }
 }

@@ -1,182 +1,179 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:miniproject/screens/resume_details_filling_screens/layouts/certificate.dart';
+import 'package:miniproject/resume_provider.dart';
 
-class Curriculum extends StatefulWidget {
-  const Curriculum({Key? key}) : super(key: key);
+class ProjectPage extends StatefulWidget {
+  const ProjectPage({super.key});
 
   @override
-  _CurriculumState createState() => _CurriculumState();
+  State<ProjectPage> createState() => _ProjectPageState();
 }
 
-class _CurriculumState extends State<Curriculum> {
-  final _formKey = GlobalKey<FormState>();
-  final TextEditingController _publicationDateController =
-      TextEditingController();
-  final List<TextEditingController> _authorControllers = [
-    TextEditingController()
-  ];
-  final double _spacing = 16.0;
-  String? _selectedPublicationType;
+class _ProjectPageState extends State<ProjectPage> {
+  List<Map<String, TextEditingController>> projectControllers = [];
+
+  @override
+  void initState() {
+    super.initState();
+    addProjectSection();
+  }
+
+  void addProjectSection() {
+    setState(() {
+      projectControllers.add({
+        'title': TextEditingController(),
+        'description': TextEditingController(),
+        'responsibilities': TextEditingController(),
+      });
+    });
+  }
 
   @override
   void dispose() {
-    _publicationDateController.dispose();
-    for (var controller in _authorControllers) {
-      controller.dispose();
+    for (var project in projectControllers) {
+      project['title']!.dispose();
+      project['description']!.dispose();
+      project['responsibilities']!.dispose();
     }
     super.dispose();
   }
 
-  void _addAuthorField() {
-    setState(() {
-      _authorControllers.add(TextEditingController());
-    });
-  }
-
-  Future<void> _selectPublicationDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2101),
-      initialDatePickerMode: DatePickerMode.year,
-    );
-    if (picked != null) {
-      setState(() {
-        _publicationDateController.text =
-            DateFormat('MMMM yyyy').format(picked);
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final double fieldPadding = MediaQuery.of(context).size.width * 0.05;
+    double screenWidth = MediaQuery.of(context).size.width;
+    double fieldPadding = 16.0;
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFFAD9CD0),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: const Text(
-          'Publications',
-          style: TextStyle(color: Colors.black),
-        ),
-        centerTitle: false,
+        title: const Text('Projects'),
+        backgroundColor: Colors.deepPurple,
       ),
       body: Padding(
-        padding: EdgeInsets.all(fieldPadding),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SectionTitle(title: "Tell us about your publications"),
-                SizedBox(height: _spacing),
-                const CustomTextField(label: 'Title of Publication'),
-                SizedBox(height: _spacing),
-                DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
-                    labelText: 'Publication Type',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0)),
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 10),
-                  ),
-                  items: [
-                    'Journal',
-                    'Conference Paper',
-                    'Research Paper',
-                    'Blog',
-                    'Book Chapter',
-                    'Whitepaper'
-                  ]
-                      .map((type) =>
-                          DropdownMenuItem(value: type, child: Text(type)))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedPublicationType = value;
-                    });
-                  },
-                  validator: (value) =>
-                      value == null ? 'Please select a publication type' : null,
-                ),
-                SizedBox(height: _spacing),
-                const SectionTitle(title: "Authors"),
-                ..._authorControllers.asMap().entries.map((entry) {
-                  int index = entry.key;
-                  return Column(
-                    children: [
-                      CustomTextField(
-                        label: 'Author ${index + 1}',
-                        controller: entry.value,
+        padding: EdgeInsets.all(screenWidth * 0.05),
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView(
+                children: [
+                  ...projectControllers.asMap().entries.map((entry) {
+                    int index = entry.key;
+                    var project = entry.value;
+
+                    return Card(
+                      elevation: 4,
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      SizedBox(height: _spacing),
-                    ],
-                  );
-                }).toList(),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton.icon(
-                    onPressed: _addAuthorField,
-                    icon: const Icon(Icons.add, color: Colors.white),
-                    label: const Text('Add More',
-                        style: TextStyle(color: Colors.white)),
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.purple.shade900,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0)),
-                    ),
-                  ),
-                ),
-                SizedBox(height: _spacing),
-                const CustomTextField(label: 'Publication Name'),
-                SizedBox(height: _spacing),
-                GestureDetector(
-                  onTap: () => _selectPublicationDate(context),
-                  child: AbsorbPointer(
-                    child: CustomTextField(
-                      label: 'Publication Date (Month & Year)',
-                      controller: _publicationDateController,
-                    ),
-                  ),
-                ),
-                SizedBox(height: _spacing),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        // Process the data
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const NextPage()),
-                        );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.purple.shade900,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0)),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: MediaQuery.of(context).size.width * 0.1,
-                        vertical: 12.0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              controller: project['title'],
+                              decoration: const InputDecoration(
+                                labelText: 'Project Title',
+                                hintText: 'e.g., Resume Builder App',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            TextFormField(
+                              controller: project['description'],
+                              maxLines: 3,
+                              decoration: const InputDecoration(
+                                labelText: 'Project Description',
+                                hintText: 'Brief summary of the project',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            TextFormField(
+                              controller: project['responsibilities'],
+                              maxLines: 3,
+                              decoration: const InputDecoration(
+                                labelText: 'Responsibilities',
+                                hintText: 'e.g., Developed backend, integrated API',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+                  const SizedBox(height: 20),
+                  Center(
+                    child: ElevatedButton.icon(
+                      onPressed: addProjectSection,
+                      icon: const Icon(Icons.add),
+                      label: const Text(
+                        'Add Project',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
                       ),
                     ),
-                    child: const Text('Next',
-                        style: TextStyle(color: Colors.white)),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: ElevatedButton(
+                onPressed: () {
+                  final resumeProvider = Provider.of<ResumeProvider>(context, listen: false);
+
+                  final projects = projectControllers.map((project) {
+                    return {
+                      'title': project['title']!.text.trim(),
+                      'description': project['description']!.text.trim(),
+                      'responsibilities': project['responsibilities']!.text.trim(),
+                    };
+                  }).where((proj) => proj['title']!.isNotEmpty).toList();
+
+                  resumeProvider.updateProjects(projects);
+
+                  Navigator.pushReplacement(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          CertificatePage(),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                        var tween = Tween(begin: 0.0, end: 1.0);
+                        var fadeAnimation = animation.drive(tween);
+                        return FadeTransition(
+                          opacity: fadeAnimation,
+                          child: child,
+                        );
+                      },
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple[900],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: fieldPadding * 2,
+                    vertical: fieldPadding * 0.8,
+                  ),
+                ),
+                child: const Text(
+                  'Next',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

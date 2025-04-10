@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:miniproject/screens/resume_details_filling_screens/selectscreen.dart';
+import 'package:provider/provider.dart';
+import 'package:miniproject/resume_provider.dart';
 import 'package:miniproject/screens/resume_details_filling_screens/layouts/workdetails.dart';
+import 'package:miniproject/screens/resume_details_filling_screens/selectscreen.dart';
 
 class Education extends StatefulWidget {
-  const Education({Key? key}) : super(key: key);
+  const Education({super.key});
 
   @override
   _EducationState createState() => _EducationState();
@@ -63,7 +65,7 @@ class _EducationState extends State<Education> {
               context,
               PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) =>
-                    Selectscreen(),
+                     Selectscreen(),
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) {
                   var tween = Tween(begin: 0.0, end: 1.0);
@@ -92,6 +94,33 @@ class _EducationState extends State<Education> {
                   fontSize: fieldFontSize,
                   fontWeight: FontWeight.bold,
                 ),
+              ),
+              SizedBox(height: fieldPadding),
+              DropdownButtonFormField<String>(
+                value: _selectedDegree,
+                decoration: InputDecoration(
+                  labelText: 'Degree Name',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: fieldPadding,
+                    vertical: fieldPadding * 0.75,
+                  ),
+                ),
+                items: _degrees
+                    .map((degree) => DropdownMenuItem<String>(
+                          value: degree,
+                          child: Text(degree),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedDegree = value;
+                  });
+                },
+                validator: (value) =>
+                    value == null ? 'Please select your degree' : null,
               ),
               SizedBox(height: fieldPadding),
               DropdownButtonFormField<String>(
@@ -210,7 +239,7 @@ class _EducationState extends State<Education> {
                   if (value != null && value.isNotEmpty) {
                     final cgpa = double.tryParse(value);
                     if (cgpa == null || cgpa < 0 || cgpa > 10) {
-                      return 'Please enter a valid CGPA (0-10)';
+                      return 'Please enter a valid CGPA (0–10)';
                     }
                   }
                   return null;
@@ -222,12 +251,26 @@ class _EducationState extends State<Education> {
                 child: ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState?.validate() ?? false) {
+                      final provider = Provider.of<ResumeProvider>(
+                        context,
+                        listen: false,
+                      );
+
+                      provider.addEducation(
+                        degree: _selectedDegree!,
+                        course: _selectedCourse!,
+                        college: _collegeController.text,
+                        graduationYear: _selectedGraduationYear!,
+                        cgpa: _cgpaController.text,
+                      );
+
                       Navigator.pushReplacement(
                         context,
                         PageRouteBuilder(
                           pageBuilder:
                               (context, animation, secondaryAnimation) =>
                                   const Workdetails(),
+                            
                           transitionsBuilder:
                               (context, animation, secondaryAnimation, child) {
                             var tween = Tween(begin: 0.0, end: 1.0);
@@ -245,6 +288,7 @@ class _EducationState extends State<Education> {
                     backgroundColor: Colors.purple[900],
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
+              
                     ),
                     padding: EdgeInsets.symmetric(
                       horizontal: fieldPadding * 2,

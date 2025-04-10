@@ -5,7 +5,7 @@ import '../../../resume_provider.dart';
 import 'package:provider/provider.dart';
 
 class Inputscreen extends StatelessWidget {
-  const Inputscreen({Key? key}) : super(key: key);
+  const Inputscreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class Inputscreen extends StatelessWidget {
 }
 
 class ContactInformationPage extends StatefulWidget {
-  const ContactInformationPage({Key? key}) : super(key: key);
+  const ContactInformationPage({super.key});
 
   @override
   _ContactInformationPageState createState() => _ContactInformationPageState();
@@ -92,8 +92,9 @@ class _ContactInformationPageState extends State<ContactInformationPage> {
                     initialValue: resumeProvider.email,
                     onChanged: resumeProvider.updateEmail,
                     validator: (value) {
-                      if (value == null || value.isEmpty)
+                      if (value == null || value.isEmpty) {
                         return 'Please enter your email';
+                      }
                       final regex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
                       return !regex.hasMatch(value)
                           ? 'Please enter a valid email'
@@ -115,8 +116,9 @@ class _ContactInformationPageState extends State<ContactInformationPage> {
                     initialValue: resumeProvider.linkedin,
                     onChanged: resumeProvider.updateLinkedin,
                     validator: (value) {
-                      if (value == null || value.isEmpty)
+                      if (value == null || value.isEmpty) {
                         return 'Please enter your LinkedIn URL';
+                      }
                       final regex = RegExp(
                           r'^(https?://)?([\w.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?$');
                       return !regex.hasMatch(value)
@@ -198,13 +200,13 @@ class CustomTextField extends StatelessWidget {
   final TextInputType? keyboardType;
 
   const CustomTextField({
-    Key? key,
+    super.key,
     required this.label,
     this.initialValue,
     this.onChanged,
     this.validator,
     this.keyboardType,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

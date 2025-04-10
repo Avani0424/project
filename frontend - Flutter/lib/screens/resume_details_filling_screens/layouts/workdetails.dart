@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-
+import 'package:miniproject/resume_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:miniproject/screens/resume_details_filling_screens/selectscreen.dart';
 import 'package:miniproject/screens/resume_details_filling_screens/layouts/acheivements.dart';
 
 class Workdetails extends StatefulWidget {
-  const Workdetails({Key? key}) : super(key: key);
+  const Workdetails({super.key});
 
   @override
   State<Workdetails> createState() => _WorkdetailsState();
@@ -12,7 +13,6 @@ class Workdetails extends StatefulWidget {
 
 class _WorkdetailsState extends State<Workdetails> {
   final _formKey = GlobalKey<FormState>();
-
   List<WorkExperienceForm> workExperienceForms = [WorkExperienceForm()];
 
   void _addWorkExperience() {
@@ -23,7 +23,23 @@ class _WorkdetailsState extends State<Workdetails> {
 
   void _submitForm() {
     if (_formKey.currentState?.validate() ?? false) {
-      // Proceed to next screen
+      final provider = Provider.of<ResumeProvider>(context, listen: false);
+      provider.clearWorkHistory(); // Clear previous entries (optional)
+
+      for (var form in workExperienceForms) {
+        provider.addWorkExperience({
+          'jobTitle': form.jobTitleController.text,
+          'company': form.companyController.text,
+          'location': form.locationController.text,
+          'startDate': form.startDateController.text,
+          'endDate': form.endDateController.text,
+          'responsibilities': form.responsibilitiesController.text
+              .split('\n')
+              .where((line) => line.trim().isNotEmpty)
+              .toList(), // Bullet points
+        });
+      }
+
       Navigator.push(
         context,
         PageRouteBuilder(
@@ -78,7 +94,7 @@ class _WorkdetailsState extends State<Workdetails> {
             key: _formKey,
             child: Column(
               children: [
-                ...workExperienceForms.map((form) => form),
+                ...workExperienceForms,
                 SizedBox(height: verticalPadding),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -111,14 +127,21 @@ class _WorkdetailsState extends State<Workdetails> {
 }
 
 class WorkExperienceForm extends StatefulWidget {
+  final TextEditingController jobTitleController = TextEditingController();
+  final TextEditingController companyController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
+  final TextEditingController startDateController = TextEditingController();
+  final TextEditingController endDateController = TextEditingController();
+  final TextEditingController responsibilitiesController =
+      TextEditingController();
+
+  WorkExperienceForm({super.key});
+
   @override
   _WorkExperienceFormState createState() => _WorkExperienceFormState();
 }
 
 class _WorkExperienceFormState extends State<WorkExperienceForm> {
-  final TextEditingController _startDateController = TextEditingController();
-  final TextEditingController _endDateController = TextEditingController();
-
   Future<void> _selectDate(
       BuildContext context, TextEditingController controller) async {
     final DateTime? picked = await showDatePicker(
@@ -134,7 +157,6 @@ class _WorkExperienceFormState extends State<WorkExperienceForm> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
     double verticalPadding = MediaQuery.of(context).size.height * 0.015;
 
     return Padding(
@@ -142,23 +164,21 @@ class _WorkExperienceFormState extends State<WorkExperienceForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const CustomTextField(label: 'Job Title'),
+          CustomTextField(label: 'Job Title', controller: widget.jobTitleController),
           SizedBox(height: verticalPadding),
-          const CustomTextField(label: 'Company Name'),
+          CustomTextField(label: 'Company Name', controller: widget.companyController),
           SizedBox(height: verticalPadding),
-          const CustomTextField(label: 'Location (City, State)'),
+          CustomTextField(label: 'Location (City, State)', controller: widget.locationController),
           SizedBox(height: verticalPadding),
           GestureDetector(
-            onTap: () => _selectDate(context, _startDateController),
+            onTap: () => _selectDate(context, widget.startDateController),
             child: AbsorbPointer(
               child: TextFormField(
-                controller: _startDateController,
+                controller: widget.startDateController,
                 decoration: InputDecoration(
                   labelText: 'Start Date',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0)),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -171,16 +191,14 @@ class _WorkExperienceFormState extends State<WorkExperienceForm> {
           ),
           SizedBox(height: verticalPadding),
           GestureDetector(
-            onTap: () => _selectDate(context, _endDateController),
+            onTap: () => _selectDate(context, widget.endDateController),
             child: AbsorbPointer(
               child: TextFormField(
-                controller: _endDateController,
+                controller: widget.endDateController,
                 decoration: InputDecoration(
                   labelText: 'End Date',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0)),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -193,14 +211,13 @@ class _WorkExperienceFormState extends State<WorkExperienceForm> {
           ),
           SizedBox(height: verticalPadding),
           TextFormField(
+            controller: widget.responsibilitiesController,
             maxLines: 4,
             decoration: InputDecoration(
               labelText: 'Key Responsibilities',
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              hintText: "Add bullet points about your responsibilities",
+              hintText: "Add bullet points (each on a new line)",
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -218,17 +235,22 @@ class _WorkExperienceFormState extends State<WorkExperienceForm> {
 
 class CustomTextField extends StatelessWidget {
   final String label;
+  final TextEditingController controller;
 
-  const CustomTextField({Key? key, required this.label}) : super(key: key);
+  const CustomTextField({
+    super.key,
+    required this.label,
+    required this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       decoration: InputDecoration(
         labelText: label,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {

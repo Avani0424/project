@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:miniproject/screens/home_screen/homescreen.dart';
+import 'package:miniproject/screens/login_screen/login.dart';
+
 
 class StartScreen extends StatelessWidget {
+  const StartScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -53,7 +56,7 @@ class StartScreen extends StatelessWidget {
                   context,
                   PageRouteBuilder(
                     pageBuilder: (context, animation, secondaryAnimation) =>
-                        Homescreen(),
+                        const Login(),
                     transitionsBuilder:
                         (context, animation, secondaryAnimation, child) {
                       var begin = 0.0;
@@ -83,7 +86,7 @@ class StartScreen extends StatelessWidget {
                 'GET STARTED',
                 style: TextStyle(
                   fontSize: screenWidth * 0.05,
-                  color: Color(0xFF6A11CB),
+                  color: const Color(0xFF6A11CB),
                 ),
               ),
             ),

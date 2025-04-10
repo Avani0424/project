@@ -1,116 +1,160 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:miniproject/resume_provider.dart';
 import 'package:miniproject/screens/resume_details_filling_screens/layouts/curriculum.dart';
-import 'package:miniproject/screens/resume_details_filling_screens/selectscreen.dart';
 
 class Skills extends StatefulWidget {
-  const Skills({Key? key}) : super(key: key);
+  const Skills({super.key});
 
   @override
   State<Skills> createState() => _SkillsState();
 }
 
 class _SkillsState extends State<Skills> {
-  final TextEditingController _skillsController = TextEditingController();
+  List<SkillSection> skillSections = [SkillSection()];
   final _formKey = GlobalKey<FormState>();
+  final double fieldPadding = 16.0;
+
+  void addSection() {
+    setState(() {
+      skillSections.add(SkillSection());
+    });
+  }
+
+  void removeSection(int index) {
+    if (skillSections.length > 1) {
+      setState(() {
+        skillSections.removeAt(index);
+      });
+    }
+  }
+
+  void addSkill(int sectionIndex) {
+    setState(() {
+      skillSections[sectionIndex].skills.add(TextEditingController());
+    });
+  }
+
+  void removeSkill(int sectionIndex, int skillIndex) {
+    if (skillSections[sectionIndex].skills.length > 1) {
+      setState(() {
+        skillSections[sectionIndex].skills.removeAt(skillIndex);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    for (var section in skillSections) {
+      section.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
-    double horizontalPadding = screenWidth * 0.05;
-    double verticalPadding = screenHeight * 0.02;
-    double buttonWidth = screenWidth * 0.3;
-    double buttonPaddingVertical = screenHeight * 0.015;
-
     return Scaffold(
       appBar: AppBar(
+        title: const Text("Skills", style: TextStyle(color: Colors.black)),
         backgroundColor: const Color(0xFFAD9CD0),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    Selectscreen(),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: child,
-                  );
-                },
-              ),
-            );
-          },
-        ),
-        title: const Text(
-          'Skills',
-          style: TextStyle(color: Colors.black),
-        ),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(horizontalPadding),
-        child: Form(
-          key: _formKey,
+      body: Form(
+        key: _formKey,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "What skills do you want to add?",
-                style: TextStyle(
-                  fontSize: screenWidth * 0.05,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: verticalPadding),
-              Text(
-                "Get help writing your bullet points.",
-                style: TextStyle(
-                  fontSize: screenWidth * 0.04,
-                  color: Colors.black54,
-                ),
-              ),
-              SizedBox(height: verticalPadding),
-
-              // Fix: Wrap TextFormField inside a SizedBox
-              SizedBox(
-                height: screenHeight * 0.2, // Adjust height to prevent overflow
-                child: TextFormField(
-                  controller: _skillsController,
-                  maxLines: null,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
+              Expanded(
+                child: ListView(
+                  children: [
+                    for (int i = 0; i < skillSections.length; i++) ...[
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: skillSections[i].sectionNameController,
+                              decoration: const InputDecoration(
+                                hintText: 'e.g. Programming Languages',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () => removeSection(i),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      for (int j = 0; j < skillSections[i].skills.length; j++)
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: skillSections[i].skills[j],
+                                decoration: const InputDecoration(
+                                  hintText: 'e.g. Python, Java',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.remove_circle, color: Colors.red),
+                              onPressed: () => removeSkill(i, j),
+                            ),
+                          ],
+                        ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton.icon(
+                          onPressed: () => addSkill(i),
+                          icon: const Icon(Icons.add),
+                          label: const Text("Add Skill"),
+                        ),
+                      ),
+                      const Divider(thickness: 1),
+                    ],
+                    const SizedBox(height: 10),
+                    ElevatedButton.icon(
+                      onPressed: addSection,
+                      icon: const Icon(Icons.add),
+                      label: const Text("Add New Section"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF4B0082),
+                        foregroundColor: Colors.white,
+                      ),
                     ),
-                    fillColor: const Color(0xFFFDECEF),
-                    filled: true,
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some skills';
-                    }
-                    return null;
-                  },
+                  ],
                 ),
               ),
-
-              SizedBox(height: verticalPadding),
-
+              const SizedBox(height: 20),
               Align(
                 alignment: Alignment.bottomRight,
                 child: ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState?.validate() ?? false) {
-                      Navigator.push(
+                      final resumeProvider = Provider.of<ResumeProvider>(context, listen: false);
+
+                      final Map<String, List<String>> collectedSkills = {};
+                      for (var section in skillSections) {
+                        final sectionName = section.sectionNameController.text.trim();
+                        final skills = section.skills
+                            .map((controller) => controller.text.trim())
+                            .where((skill) => skill.isNotEmpty)
+                            .toList();
+                        if (sectionName.isNotEmpty && skills.isNotEmpty) {
+                          collectedSkills[sectionName] = skills;
+                        }
+                      }
+
+                      resumeProvider.updateSkills(collectedSkills);
+
+                      Navigator.pushReplacement(
                         context,
                         PageRouteBuilder(
-                          pageBuilder:
-                              (context, animation, secondaryAnimation) =>
-                                  const Curriculum(),
-                          transitionsBuilder:
-                              (context, animation, secondaryAnimation, child) {
+                          pageBuilder: (context, animation, secondaryAnimation) => const ProjectPage(),
+                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
                             return FadeTransition(
                               opacity: animation,
                               child: child,
@@ -121,13 +165,13 @@ class _SkillsState extends State<Skills> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF4B0082),
+                    backgroundColor: Colors.purple[900],
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     padding: EdgeInsets.symmetric(
-                      horizontal: buttonWidth * 0.2,
-                      vertical: buttonPaddingVertical,
+                      horizontal: fieldPadding * 2,
+                      vertical: fieldPadding * 0.8,
                     ),
                   ),
                   child: const Text(
@@ -141,5 +185,17 @@ class _SkillsState extends State<Skills> {
         ),
       ),
     );
+  }
+}
+
+class SkillSection {
+  TextEditingController sectionNameController = TextEditingController();
+  List<TextEditingController> skills = [TextEditingController()];
+
+  void dispose() {
+    sectionNameController.dispose();
+    for (var c in skills) {
+      c.dispose();
+    }
   }
 }

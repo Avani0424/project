@@ -1,159 +1,179 @@
 import 'package:flutter/material.dart';
-import 'package:miniproject/screens/resume_details_filling_screens/selectscreen.dart';
+import 'package:provider/provider.dart';
+import 'package:miniproject/screens/resume_details_filling_screens/layouts/certificate.dart';
+import 'package:miniproject/resume_provider.dart';
 
-class Curriculum extends StatefulWidget {
-  const Curriculum({Key? key}) : super(key: key);
+class ProjectPage extends StatefulWidget {
+  const ProjectPage({super.key});
 
   @override
-  _CurriculumState createState() => _CurriculumState();
+  State<ProjectPage> createState() => _ProjectPageState();
 }
 
-class _CurriculumState extends State<Curriculum> {
-  final TextEditingController _activitiesController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+class _ProjectPageState extends State<ProjectPage> {
+  List<Map<String, TextEditingController>> projectControllers = [];
+
+  @override
+  void initState() {
+    super.initState();
+    addProjectSection();
+  }
+
+  void addProjectSection() {
+    setState(() {
+      projectControllers.add({
+        'title': TextEditingController(),
+        'description': TextEditingController(),
+        'responsibilities': TextEditingController(),
+      });
+    });
+  }
 
   @override
   void dispose() {
-    _activitiesController.dispose();
-    super.dispose();
-  }
-
-  // Method to validate form and navigate
-  void _onNextPressed() {
-    if (_formKey.currentState?.validate() ?? false) {
-      // If form is valid, navigate to the next page
-      Navigator.push(
-        context,
-        PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              Selectscreen(), // Go to the next page
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            var tween = Tween(begin: 0.0, end: 1.0);
-            var fadeAnimation = animation.drive(tween);
-            return FadeTransition(
-              opacity: fadeAnimation,
-              child: child,
-            );
-          },
-        ),
-      );
+    for (var project in projectControllers) {
+      project['title']!.dispose();
+      project['description']!.dispose();
+      project['responsibilities']!.dispose();
     }
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+    double fieldPadding = 16.0;
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFFAD9CD0),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    Selectscreen(),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  var tween = Tween(begin: 0.0, end: 1.0);
-                  var fadeAnimation = animation.drive(tween);
-
-                  return FadeTransition(
-                    opacity: fadeAnimation,
-                    child: child,
-                  );
-                },
-              ),
-            );
-          },
-        ),
-        title: Text(
-          'Curriculum',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: screenWidth * 0.045,
-          ),
-        ),
-        centerTitle: false,
+        title: const Text('Projects'),
+        backgroundColor: Colors.deepPurple,
       ),
       body: Padding(
         padding: EdgeInsets.all(screenWidth * 0.05),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Tell us about your extra curricular activities",
-                style: TextStyle(
-                  fontSize: screenWidth * 0.05,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: screenHeight * 0.01),
-              Text(
-                "Get help writing your bullet points.",
-                style: TextStyle(
-                  fontSize: screenWidth * 0.04,
-                  color: Colors.black54,
-                ),
-              ),
-              SizedBox(height: screenHeight * 0.02),
-              Expanded(
-                child: TextFormField(
-                  controller: _activitiesController,
-                  maxLines: null,
-                  expands: true,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(screenWidth * 0.02),
-                    ),
-                    fillColor: const Color(0xFFFDECEF),
-                    filled: true,
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your extracurricular activities';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              SizedBox(height: screenHeight * 0.02),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: ElevatedButton(
-                  onPressed: _onNextPressed, // Use the validation method
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF4B0082),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(screenWidth * 0.02),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: screenWidth * 0.08,
-                      vertical: screenHeight * 0.015,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Next',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: screenWidth * 0.04,
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView(
+                children: [
+                  ...projectControllers.asMap().entries.map((entry) {
+                    int index = entry.key;
+                    var project = entry.value;
+
+                    return Card(
+                      elevation: 4,
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              controller: project['title'],
+                              decoration: const InputDecoration(
+                                labelText: 'Project Title',
+                                hintText: 'e.g., Resume Builder App',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            TextFormField(
+                              controller: project['description'],
+                              maxLines: 3,
+                              decoration: const InputDecoration(
+                                labelText: 'Project Description',
+                                hintText: 'Brief summary of the project',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            TextFormField(
+                              controller: project['responsibilities'],
+                              maxLines: 3,
+                              decoration: const InputDecoration(
+                                labelText: 'Responsibilities',
+                                hintText: 'e.g., Developed backend, integrated API',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(width: screenWidth * 0.01),
-                    ],
+                    );
+                  }),
+                  const SizedBox(height: 20),
+                  Center(
+                    child: ElevatedButton.icon(
+                      onPressed: addProjectSection,
+                      icon: const Icon(Icons.add),
+                      label: const Text(
+                        'Add Project',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: ElevatedButton(
+                onPressed: () {
+                  final resumeProvider = Provider.of<ResumeProvider>(context, listen: false);
+
+                  final projects = projectControllers.map((project) {
+                    return {
+                      'title': project['title']!.text.trim(),
+                      'description': project['description']!.text.trim(),
+                      'responsibilities': project['responsibilities']!.text.trim(),
+                    };
+                  }).where((proj) => proj['title']!.isNotEmpty).toList();
+
+                  resumeProvider.updateProjects(projects);
+
+                  Navigator.pushReplacement(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          CertificatePage(),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                        var tween = Tween(begin: 0.0, end: 1.0);
+                        var fadeAnimation = animation.drive(tween);
+                        return FadeTransition(
+                          opacity: fadeAnimation,
+                          child: child,
+                        );
+                      },
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple[900],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: fieldPadding * 2,
+                    vertical: fieldPadding * 0.8,
                   ),
                 ),
+                child: const Text(
+                  'Next',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

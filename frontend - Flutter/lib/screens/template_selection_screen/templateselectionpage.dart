@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../resume_provider.dart';
 
 class TemplateSelectionPage extends StatelessWidget {
-  const TemplateSelectionPage({Key? key}) : super(key: key);
+  const TemplateSelectionPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class TemplateSelectionPage extends StatelessWidget {
           ),
         ),
         centerTitle: true, // Centers the title
-        automaticallyImplyLeading: false, // Removes back arrow
+      
       ),
       body: PageView.builder(
         scrollDirection: Axis.vertical, // Vertical scrolling

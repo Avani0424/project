@@ -80,7 +80,6 @@ class _ProfessionalSummaryPageState extends State<ProfessionalSummaryPage> {
                   // Update the professional summary in the provider whenever the text changes
                   Provider.of<ResumeProvider>(context, listen: false)
                       .updateProfessionalSummary(value);
-                 
                 },
               ),
             ),

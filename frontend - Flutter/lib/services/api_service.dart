@@ -1,42 +1,27 @@
+// resume_api_service.dart
+
+import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'resume_model.dart';
 
-class ApiService {
-  Future<void> submitResume({
-    required String firstName,
-    required String lastName,
-    required String email,
-    required String age,
-    required String phoneNumber,
-    required String city,
-    required String country,
-    required String achievements,
-  }) async {
-    final url = Uri.parse(
-        'http://10.0.2.2:8000/submit_resume/'); // Use PC's IP for a real device
+class ResumeApiService {
+  const String baseUrl = 'http://10.0.2.2:8000';
 
-    var response = await http.post(
-      url,
-      headers: {"Content-Type": "application/json"},
-      body: '''
-      {
-        "first_name": "$firstName",
-        "last_name": "$lastName",
-        "email": "$email",
-        "age": "$age",
-        "phone_number": "$phoneNumber",
-        "city": "$city",
-        "country": "$country",
-        "achievements": "$achievements"
-      }
-      ''',
+  ResumeApiService();
+
+  Future<Resume> postResume(Resume resume) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/resume'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(resume.toJson()),
     );
 
-    if (response.statusCode == 200) {
-      print("✅ Resume submitted successfully!");
-      print("Response: ${response.body}");
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final jsonBody = json.decode(response.body);
+      return Resume.fromJson(jsonBody);
     } else {
-      print("❌ Error: ${response.statusCode}");
-      print("Response: ${response.body}");
+      throw Exception('Failed to post resume');
     }
   }
 }
+

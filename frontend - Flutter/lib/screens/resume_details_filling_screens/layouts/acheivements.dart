@@ -10,6 +10,7 @@ class ProfessionalSummaryPage extends StatefulWidget {
   State<ProfessionalSummaryPage> createState() => _ProfessionalSummaryPageState();
 }
 
+
 class _ProfessionalSummaryPageState extends State<ProfessionalSummaryPage> {
   late TextEditingController _controller;
 
@@ -70,6 +71,7 @@ class _ProfessionalSummaryPageState extends State<ProfessionalSummaryPage> {
                   hintText: "A concise, 3–5 sentence paragraph that highlights your key skills, experience, and career achievements.",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
+      
                   ),
                   fillColor: const Color(0xFFFDECEF),
                   filled: true,
@@ -78,9 +80,11 @@ class _ProfessionalSummaryPageState extends State<ProfessionalSummaryPage> {
                   // Update the professional summary in the provider whenever the text changes
                   Provider.of<ResumeProvider>(context, listen: false)
                       .updateProfessionalSummary(value);
+                 
                 },
               ),
             ),
+            SizedBox(height: fieldPadding),
             SizedBox(height: fieldPadding),
             Align(
               alignment: Alignment.bottomRight,
@@ -112,15 +116,18 @@ class _ProfessionalSummaryPageState extends State<ProfessionalSummaryPage> {
                   backgroundColor: const Color(0xFF4B0082),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
+         
                   ),
                   padding: EdgeInsets.symmetric(
                     horizontal: fieldPadding * 2,
                     vertical: fieldPadding,
+                  
                   ),
                 ),
                 child: const Text(
                   'Next',
                   style: TextStyle(color: Colors.white),
+                
                 ),
               ),
             ),

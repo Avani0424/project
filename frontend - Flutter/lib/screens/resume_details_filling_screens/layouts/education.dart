@@ -124,6 +124,33 @@ class _EducationState extends State<Education> {
               ),
               SizedBox(height: fieldPadding),
               DropdownButtonFormField<String>(
+                value: _selectedDegree,
+                decoration: InputDecoration(
+                  labelText: 'Degree Name',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: fieldPadding,
+                    vertical: fieldPadding * 0.75,
+                  ),
+                ),
+                items: _degrees
+                    .map((degree) => DropdownMenuItem<String>(
+                          value: degree,
+                          child: Text(degree),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedDegree = value;
+                  });
+                },
+                validator: (value) =>
+                    value == null ? 'Please select your degree' : null,
+              ),
+              SizedBox(height: fieldPadding),
+              DropdownButtonFormField<String>(
                 value: _selectedCourse,
                 decoration: InputDecoration(
                   labelText: 'Course',
@@ -243,6 +270,7 @@ class _EducationState extends State<Education> {
                           pageBuilder:
                               (context, animation, secondaryAnimation) =>
                                   const Workdetails(),
+                            
                           transitionsBuilder:
                               (context, animation, secondaryAnimation, child) {
                             var tween = Tween(begin: 0.0, end: 1.0);
@@ -260,6 +288,7 @@ class _EducationState extends State<Education> {
                     backgroundColor: Colors.purple[900],
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
+              
                     ),
                     padding: EdgeInsets.symmetric(
                       horizontal: fieldPadding * 2,

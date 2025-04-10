@@ -179,3 +179,57 @@ class _ProjectPageState extends State<ProjectPage> {
     );
   }
 }
+
+class SectionTitle extends StatelessWidget {
+  final String title;
+
+  const SectionTitle({Key? key, required this.title}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final double fontSize = MediaQuery.of(context).size.width * 0.05;
+    return Text(
+      title,
+      style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
+    );
+  }
+}
+
+class CustomTextField extends StatelessWidget {
+  final String label;
+  final TextEditingController? controller;
+
+  const CustomTextField({Key? key, required this.label, this.controller})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      ),
+      validator: (value) =>
+          value == null || value.isEmpty ? '$label is required' : null,
+    );
+  }
+}
+
+class NextPage extends StatelessWidget {
+  const NextPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Next Page'),
+      ),
+      body: const Center(
+        child: Text('This is the next page.'),
+      ),
+    );
+  }
+}

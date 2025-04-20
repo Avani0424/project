@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:miniproject/screens/template_selection_screen/templateselectionpage.dart';
+import 'package:miniproject/services/api_service.dart';
 
 class Login extends StatelessWidget {
   const Login({super.key});
@@ -79,7 +80,8 @@ class Login extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (_) => const TemplateSelectionPage())),
-                  child: const Text('skip'))
+                  child: const Text('skip')),
+              
             ],
           ),
         ),

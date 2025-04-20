@@ -64,15 +64,29 @@ class Resume(BaseModel):
 # In-memory storage
 resume_store = {}
 
-# Function to enhance text using GPT4All
+# Smart text enhancement function
 def enhance_text(text: str, prompt: str):
-    full_prompt = f"{prompt}\n{text}"
-    
-    # Generate response from GPT4All
+    full_prompt = f"{prompt.strip()}\n{text.strip()}"
+
     with gpt4all_model.chat_session():
         response = gpt4all_model.generate(full_prompt, max_tokens=150)
-    
-    return response.strip()
+
+    cleaned_response = response.strip()
+    lines = cleaned_response.splitlines()
+
+    # Remove first line if it looks like an intro
+    if lines:
+        first_line = lines[0].lower()
+        if (
+            len(first_line.split()) <= 7 or
+            any(keyword in first_line for keyword in [
+                "sure", "here", "absolutely", "take a look", "updated", "improved"
+            ])
+        ):
+            lines = lines[1:]
+
+    final_text = " ".join([line.strip() for line in lines if line.strip()])
+    return final_text.strip()
 
 @app.post("/complete-resume")
 def process_resume(resume_data: Resume):
@@ -86,20 +100,21 @@ def process_resume(resume_data: Resume):
     # Step 1: Store the resume
     resume_id = len(resume_store) + 1
     resume_store[resume_id] = resume_data
-    
+
     # Step 2: Enhance the resume
-    # Enhance summary
     enhanced_summary = enhance_text(
         resume_data.summary,
-        "Improve this professional summary to make it more engaging and impactful for recruiters. Also make sure to reply only the enhanced content and nothing else:"
+        "Improve this professional summary for a resume. Return only the enhanced content. Do not include any introductions or extra comments."
     )
 
-    # Enhance work experience descriptions
     enhanced_experience = []
     for exp in resume_data.experience:
-        improved_responsibilities = [enhance_text(
-            resp, "Make this work responsibility more professional and impactful for a resume. Also make sure to reply only the enhanced content and nothing else:") 
-            for resp in exp.responsibilities]
+        improved_responsibilities = [
+            enhance_text(
+                resp,
+                "Improve this work responsibility for a resume. Return only the enhanced content without introductions or comments:"
+            ) for resp in exp.responsibilities
+        ]
 
         enhanced_experience.append(Experience(
             company=exp.company,
@@ -109,16 +124,17 @@ def process_resume(resume_data: Resume):
             responsibilities=improved_responsibilities
         ))
 
-    # Enhance project descriptions
     enhanced_projects = []
     for proj in resume_data.projects:
         enhanced_description = enhance_text(
-            proj.description, "Make this project description more impressive for a resume. Also make sure to reply only the enhanced content and nothing else:")
+            proj.description,
+            "Improve this project description for a resume. Return only the enhanced content without introductions or explanations:"
+        )
         enhanced_projects.append(Project(
             name=proj.name,
             description=enhanced_description
         ))
-    
+
     # Create enhanced resume object
     enhanced_resume = Resume(
         name=resume_data.name,
@@ -131,13 +147,12 @@ def process_resume(resume_data: Resume):
         certifications=resume_data.certifications,
         languages=resume_data.languages
     )
-    
-    # Store the enhanced resume
+
     resume_store[resume_id] = enhanced_resume
-    
+
     # Step 3: Generate PDF
     pdf_file = generate_resume_pdf(enhanced_resume.dict())
-    
+
     # Step 4: Return the PDF for download
     return FileResponse(pdf_file, media_type='application/pdf', filename=f"{resume_data.name.replace(' ', '_')}_resume.pdf")
 

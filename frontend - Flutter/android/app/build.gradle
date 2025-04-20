@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.miniproject"
-    compileSdk = 34  // Update SDK version to latest
+    compileSdk = 35  // Update SDK version to latest
 
     ndkVersion = "25.2.9519653" // Ensure latest NDK version
 
